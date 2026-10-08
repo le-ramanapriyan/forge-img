@@ -289,7 +289,7 @@
 
       const td = tr.lastElementChild;
       const a = document.createElement("a");
-      a.className = "btn btn-ghost btn-tiny";
+      a.className = "btn btn-secondary btn-tiny";
       a.href = r.url;
       a.download = r.name;
       a.textContent = "Download";

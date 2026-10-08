@@ -3,197 +3,233 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>png-to-webp — browser compressor</title>
+    <title>png-to-webp</title>
     <meta
       name="description"
-      content="Convert images to WebP in the browser. Preset, quality %, or size-based compression. Runs locally — files never leave your device."
+      content="Convert images to WebP in the browser. Preset, quality %, or size-based compression."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Sora:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="atmosphere" aria-hidden="true"></div>
-
-    <header class="site-header">
-      <p class="brand">png-to-webp</p>
-      <p class="byline">by RAMANAPRIYAN M R V</p>
-    </header>
-
-    <main>
-      <section class="hero">
-        <h1>Drop images. Get WebP.</h1>
-        <p class="lede">
-          Compress in your browser — files stay on your device. Pick a preset,
-          a quality percentage, or a target file size.
-        </p>
-      </section>
-
-      <section class="workspace" aria-label="Converter">
-        <div
-          class="dropzone"
-          id="dropzone"
-          tabindex="0"
-          role="button"
-          aria-label="Drop images or choose files"
-        >
-          <div class="dropzone-inner">
-            <p class="dropzone-title">Drop files or a folder here</p>
-            <p class="dropzone-hint">PNG, JPEG, GIF, WebP · batch supported</p>
-            <div class="dropzone-actions">
-              <label class="btn btn-primary">
-                Choose files
-                <input
-                  id="fileInput"
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  hidden
-                />
-              </label>
-              <label class="btn btn-ghost">
-                Choose folder
-                <input
-                  id="folderInput"
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  webkitdirectory
-                  directory
-                  hidden
-                />
-              </label>
-            </div>
+    <div class="page">
+      <header class="topbar">
+        <div class="brand-block">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <div>
+            <p class="brand">png-to-webp</p>
+            <p class="tagline">Local image compression</p>
           </div>
         </div>
+        <p class="byline">RAMANAPRIYAN M R V</p>
+      </header>
 
-        <aside class="controls" aria-label="Compression options">
-          <h2>Compression</h2>
+      <main>
+        <section class="intro">
+          <h1>Convert images to WebP</h1>
+          <p>
+            Files stay on your device. Choose a quality preset, percentage, or
+            target size.
+          </p>
+        </section>
 
-          <div class="mode-tabs" role="tablist" aria-label="Compression type">
-            <button
-              type="button"
-              class="mode-tab is-active"
-              data-mode="preset"
-              role="tab"
-              aria-selected="true"
-            >
-              Preset
-            </button>
-            <button
-              type="button"
-              class="mode-tab"
-              data-mode="quality"
-              role="tab"
-              aria-selected="false"
-            >
-              Percentage
-            </button>
-            <button
-              type="button"
-              class="mode-tab"
-              data-mode="size"
-              role="tab"
-              aria-selected="false"
-            >
-              Size based
-            </button>
-          </div>
-
-          <div class="panel is-active" data-panel="preset">
-            <p class="panel-label">Quality preset</p>
-            <div class="preset-row">
-              <label class="chip">
-                <input type="radio" name="preset" value="high" checked />
-                <span>High</span>
-                <small>~92%</small>
-              </label>
-              <label class="chip">
-                <input type="radio" name="preset" value="medium" />
-                <span>Medium</span>
-                <small>~75%</small>
-              </label>
-              <label class="chip">
-                <input type="radio" name="preset" value="low" />
-                <span>Low</span>
-                <small>~50%</small>
-              </label>
+        <section class="panel workspace" aria-label="Converter">
+          <div
+            class="dropzone"
+            id="dropzone"
+            tabindex="0"
+            role="button"
+            aria-label="Drop images or choose files"
+          >
+            <div class="dropzone-inner">
+              <div class="drop-icon" aria-hidden="true">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M12 16V4m0 0l-4 4m4-4l4 4M4 16.5V18a2 2 0 002 2h12a2 2 0 002-2v-1.5"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+              <p class="dropzone-title">Drop files or a folder here</p>
+              <p class="dropzone-hint">PNG, JPEG, GIF, WebP · batch supported</p>
+              <div class="dropzone-actions">
+                <label class="btn btn-primary">
+                  Choose files
+                  <input
+                    id="fileInput"
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    hidden
+                  />
+                </label>
+                <label class="btn btn-secondary">
+                  Choose folder
+                  <input
+                    id="folderInput"
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    webkitdirectory
+                    directory
+                    hidden
+                  />
+                </label>
+              </div>
             </div>
           </div>
 
-          <div class="panel" data-panel="quality">
-            <label class="panel-label" for="qualityRange">
-              Quality <strong id="qualityValue">80</strong>%
-            </label>
-            <input
-              id="qualityRange"
-              type="range"
-              min="1"
-              max="100"
-              value="80"
-            />
-          </div>
+          <aside class="controls" aria-label="Compression options">
+            <div class="controls-head">
+              <h2>Settings</h2>
+            </div>
 
-          <div class="panel" data-panel="size">
-            <label class="panel-label" for="sizeTarget">
-              Target max size (KB)
-            </label>
-            <input
-              id="sizeTarget"
-              type="number"
-              min="1"
-              max="5000"
-              value="100"
-              step="1"
-            />
-            <p class="panel-note">
-              Finds the highest quality that fits under this size. Keeps original
-              dimensions.
-            </p>
-          </div>
+            <div class="field">
+              <span class="field-label">Mode</span>
+              <div class="segmented" role="tablist" aria-label="Compression type">
+                <button
+                  type="button"
+                  class="mode-tab is-active"
+                  data-mode="preset"
+                  role="tab"
+                  aria-selected="true"
+                >
+                  Preset
+                </button>
+                <button
+                  type="button"
+                  class="mode-tab"
+                  data-mode="quality"
+                  role="tab"
+                  aria-selected="false"
+                >
+                  Percentage
+                </button>
+                <button
+                  type="button"
+                  class="mode-tab"
+                  data-mode="size"
+                  role="tab"
+                  aria-selected="false"
+                >
+                  Size
+                </button>
+              </div>
+            </div>
 
-          <div class="control-actions">
-            <button type="button" class="btn btn-primary" id="convertBtn" disabled>
-              Convert to WebP
-            </button>
-            <button type="button" class="btn btn-ghost" id="clearBtn" disabled>
-              Clear
-            </button>
-          </div>
-        </aside>
-      </section>
+            <div class="panel is-active" data-panel="preset">
+              <span class="field-label">Quality</span>
+              <div class="preset-row">
+                <label class="chip">
+                  <input type="radio" name="preset" value="high" checked />
+                  <span>High</span>
+                  <small>92%</small>
+                </label>
+                <label class="chip">
+                  <input type="radio" name="preset" value="medium" />
+                  <span>Medium</span>
+                  <small>75%</small>
+                </label>
+                <label class="chip">
+                  <input type="radio" name="preset" value="low" />
+                  <span>Low</span>
+                  <small>50%</small>
+                </label>
+              </div>
+            </div>
 
-      <section class="results" id="resultsSection" hidden>
-        <div class="results-head">
-          <h2>Results</h2>
-          <div class="results-actions">
-            <button type="button" class="btn btn-primary" id="downloadAllBtn" disabled>
-              Download all (.zip)
+            <div class="panel" data-panel="quality">
+              <label class="field-label" for="qualityRange">
+                Quality <strong id="qualityValue">80</strong>%
+              </label>
+              <input
+                id="qualityRange"
+                type="range"
+                min="1"
+                max="100"
+                value="80"
+              />
+            </div>
+
+            <div class="panel" data-panel="size">
+              <label class="field-label" for="sizeTarget">
+                Max file size (KB)
+              </label>
+              <input
+                id="sizeTarget"
+                type="number"
+                min="1"
+                max="5000"
+                value="100"
+                step="1"
+              />
+              <p class="field-help">
+                Uses the highest quality that fits. Dimensions stay the same.
+              </p>
+            </div>
+
+            <div class="control-actions">
+              <button
+                type="button"
+                class="btn btn-primary btn-block"
+                id="convertBtn"
+                disabled
+              >
+                Convert to WebP
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary btn-block"
+                id="clearBtn"
+                disabled
+              >
+                Clear
+              </button>
+            </div>
+          </aside>
+        </section>
+
+        <section class="panel results" id="resultsSection" hidden>
+          <div class="results-head">
+            <div>
+              <h2>Results</h2>
+              <p class="results-summary" id="resultsSummary"></p>
+            </div>
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="downloadAllBtn"
+              disabled
+            >
+              Download ZIP
             </button>
           </div>
-        </div>
-        <p class="results-summary" id="resultsSummary"></p>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>File</th>
-                <th>Original</th>
-                <th>WebP</th>
-                <th>Saved</th>
-                <th>Quality</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody id="resultsBody"></tbody>
-          </table>
-        </div>
-      </section>
-    </main>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>File</th>
+                  <th>Original</th>
+                  <th>WebP</th>
+                  <th>Saved</th>
+                  <th>Quality</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="resultsBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
     <script src="app.js"></script>
