@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>png-to-webp — browser compressor</title>
+    <meta
+      name="description"
+      content="Convert images to WebP in the browser. Preset, quality %, or size-based compression. Runs locally — files never leave your device."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Sora:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="atmosphere" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <p class="brand">png-to-webp</p>
+      <p class="byline">by RAMANAPRIYAN M R V</p>
+    </header>
+
+    <main>
+      <section class="hero">
+        <h1>Drop images. Get WebP.</h1>
+        <p class="lede">
+          Compress in your browser — files stay on your device. Pick a preset,
+          a quality percentage, or a target file size.
+        </p>
+      </section>
+
+      <section class="workspace" aria-label="Converter">
+        <div
+          class="dropzone"
+          id="dropzone"
+          tabindex="0"
+          role="button"
+          aria-label="Drop images or choose files"
+        >
+          <div class="dropzone-inner">
+            <p class="dropzone-title">Drop files or a folder here</p>
+            <p class="dropzone-hint">PNG, JPEG, GIF, WebP · batch supported</p>
+            <div class="dropzone-actions">
+              <label class="btn btn-primary">
+                Choose files
+                <input
+                  id="fileInput"
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  hidden
+                />
+              </label>
+              <label class="btn btn-ghost">
+                Choose folder
+                <input
+                  id="folderInput"
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  webkitdirectory
+                  directory
+                  hidden
+                />
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <aside class="controls" aria-label="Compression options">
+          <h2>Compression</h2>
+
+          <div class="mode-tabs" role="tablist" aria-label="Compression type">
+            <button
+              type="button"
+              class="mode-tab is-active"
+              data-mode="preset"
+              role="tab"
+              aria-selected="true"
+            >
+              Preset
+            </button>
+            <button
+              type="button"
+              class="mode-tab"
+              data-mode="quality"
+              role="tab"
+              aria-selected="false"
+            >
+              Percentage
+            </button>
+            <button
+              type="button"
+              class="mode-tab"
+              data-mode="size"
+              role="tab"
+              aria-selected="false"
+            >
+              Size based
+            </button>
+          </div>
+
+          <div class="panel is-active" data-panel="preset">
+            <p class="panel-label">Quality preset</p>
+            <div class="preset-row">
+              <label class="chip">
+                <input type="radio" name="preset" value="high" checked />
+                <span>High</span>
+                <small>~92%</small>
+              </label>
+              <label class="chip">
+                <input type="radio" name="preset" value="medium" />
+                <span>Medium</span>
+                <small>~75%</small>
+              </label>
+              <label class="chip">
+                <input type="radio" name="preset" value="low" />
+                <span>Low</span>
+                <small>~50%</small>
+              </label>
+            </div>
+          </div>
+
+          <div class="panel" data-panel="quality">
+            <label class="panel-label" for="qualityRange">
+              Quality <strong id="qualityValue">80</strong>%
+            </label>
+            <input
+              id="qualityRange"
+              type="range"
+              min="1"
+              max="100"
+              value="80"
+            />
+          </div>
+
+          <div class="panel" data-panel="size">
+            <label class="panel-label" for="sizeTarget">
+              Target max size (KB)
+            </label>
+            <input
+              id="sizeTarget"
+              type="number"
+              min="1"
+              max="5000"
+              value="100"
+              step="1"
+            />
+            <p class="panel-note">
+              Finds the highest quality that fits under this size. Keeps original
+              dimensions.
+            </p>
+          </div>
+
+          <label class="check-row">
+            <input id="keepNames" type="checkbox" checked />
+            <span>Keep base filename (image.webp)</span>
+          </label>
+
+          <div class="control-actions">
+            <button type="button" class="btn btn-primary" id="convertBtn" disabled>
+              Convert to WebP
+            </button>
+            <button type="button" class="btn btn-ghost" id="clearBtn" disabled>
+              Clear
+            </button>
+          </div>
+        </aside>
+      </section>
+
+      <section class="results" id="resultsSection" hidden>
+        <div class="results-head">
+          <h2>Results</h2>
+          <div class="results-actions">
+            <button type="button" class="btn btn-primary" id="downloadAllBtn" disabled>
+              Download all (.zip)
+            </button>
+          </div>
+        </div>
+        <p class="results-summary" id="resultsSummary"></p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>File</th>
+                <th>Original</th>
+                <th>WebP</th>
+                <th>Saved</th>
+                <th>Quality</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="resultsBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        Runs fully in your browser ·
+        <a href="https://github.com/le-ramanapriyan/private-repo/tree/main/png-to-webp"
+          >Source</a
+        >
+      </p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
