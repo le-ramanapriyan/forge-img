@@ -1,0 +1,136 @@
+.hero {
+  max-width: 720px;
+  margin-bottom: var(--space-6);
+  animation: rise 0.7s ease both;
+}
+
+.eyebrow {
+  margin: 0 0 var(--space-3);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-hot);
+}
+
+.hero h1 {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+}
+
+.hero .lede {
+  margin: 0 0 var(--space-5);
+  color: var(--ink-dark-muted);
+  font-size: clamp(1.05rem, 2vw, 1.2rem);
+  max-width: 46ch;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.section-label {
+  margin: 0 0 var(--space-3);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-dark-muted);
+}
+
+.tool-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 440px);
+  gap: var(--space-5);
+  align-items: start;
+  min-height: min(72vh, 720px);
+}
+
+.tool-page-hero {
+  max-width: 520px;
+  padding-top: var(--space-2);
+  animation: rise 0.65s ease both;
+}
+
+.tool-page-hero h1 {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+}
+
+.tool-page-hero p {
+  margin: 0;
+  color: var(--ink-dark-muted);
+  font-size: 1.05rem;
+  max-width: 40ch;
+}
+
+#tool-workspace {
+  position: sticky;
+  top: var(--space-4);
+  animation: rise 0.7s ease 0.08s both;
+}
+
+.workspace-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: min(72vh, 720px);
+  max-height: min(82vh, 820px);
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.workspace-header {
+  flex-shrink: 0;
+}
+
+.workspace-body {
+  flex: 1;
+  min-height: 0;
+}
+
+.workspace-footer {
+  flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+  .tool-layout {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  #tool-workspace {
+    position: static;
+  }
+
+  .workspace-panel {
+    min-height: 520px;
+    max-height: none;
+  }
+}
+
+.tool-card:nth-child(1) {
+  animation-delay: 0.05s;
+}
+.tool-card:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.tool-card:nth-child(3) {
+  animation-delay: 0.15s;
+}
+.tool-card:nth-child(4) {
+  animation-delay: 0.2s;
+}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Resize IMAGE — ForgeIMG</title>
+    <meta name="description" content="Resize images in your browser with ForgeIMG." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/css/tokens.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/site.css" />
+  </head>
+  <body data-tool="resize">
+    <div class="site-shell">
+      <header class="site-header" id="site-header"></header>
+      <main class="site-main">
+        <div class="tool-layout">
+          <section class="tool-page-hero">
+            <p class="eyebrow">Modify</p>
+            <h1>Resize IMAGE</h1>
+            <p>
+              Scale by exact pixels or percentage. Lock aspect ratio to keep
+              proportions consistent across a batch.
+            </p>
+          </section>
+          <div id="tool-workspace"></div>
+        </div>
+      </main>
+      <footer class="site-footer" id="site-footer"></footer>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <script src="../assets/js/chrome.js"></script>
+    <script src="../assets/js/core.js"></script>
+    <script src="../assets/js/tool-shell.js"></script>
+    <script src="tool.js"></script>
+  </body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ForgeIMG — On-device image tools</title>
+    <meta
+      name="description"
+      content="ForgeIMG: compress, convert to WebP, resize, and crop images in your browser."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/tokens.css" />
+    <link rel="stylesheet" href="assets/css/components.css" />
+    <link rel="stylesheet" href="assets/css/site.css" />
+  </head>
+  <body data-tool="home">
+    <div class="site-shell">
+      <header class="site-header" id="site-header"></header>
+      <main class="site-main">
+        <section class="hero">
+          <p class="eyebrow">Private · on-device processing</p>
+          <h1>Every essential image tool, forged for speed</h1>
+          <p class="lede">
+            Compress, convert to WebP, resize, and crop — entirely in your
+            browser. Nothing is uploaded.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary btn-lg" href="compress/">Start with Compress</a>
+            <a class="btn btn-secondary btn-lg" href="convert-webp/">Convert to WebP</a>
+          </div>
+        </section>
+
+        <p class="section-label">Tools</p>
+        <section class="tool-grid" aria-label="ForgeIMG tools">
+          <a class="tool-card" href="compress/">
+            <div class="tool-card-icon" aria-hidden="true">C</div>
+            <h2>Compress IMAGE</h2>
+            <p>
+              Shrink JPG, PNG, or WebP with presets, quality %, or a max file
+              size target.
+            </p>
+            <span class="tool-card-cta">Open tool →</span>
+          </a>
+          <a class="tool-card" href="convert-webp/">
+            <div class="tool-card-icon" aria-hidden="true">W</div>
+            <h2>Convert to WebP</h2>
+            <p>
+              Batch-convert images to WebP with high / medium / low, percentage,
+              or size-based encoding.
+            </p>
+            <span class="tool-card-cta">Open tool →</span>
+          </a>
+          <a class="tool-card" href="resize/">
+            <div class="tool-card-icon" aria-hidden="true">R</div>
+            <h2>Resize IMAGE</h2>
+            <p>
+              Scale by pixels or percent. Lock aspect ratio to keep proportions
+              clean.
+            </p>
+            <span class="tool-card-cta">Open tool →</span>
+          </a>
+          <a class="tool-card" href="crop/">
+            <div class="tool-card-icon" aria-hidden="true">K</div>
+            <h2>Crop IMAGE</h2>
+            <p>
+              Crop with free selection or fixed ratios — 1:1, 16:9, and 4:3.
+            </p>
+            <span class="tool-card-cta">Open tool →</span>
+          </a>
+        </section>
+      </main>
+      <footer class="site-footer" id="site-footer"></footer>
+    </div>
+    <script src="assets/js/chrome.js"></script>
+  </body>
+</html>
