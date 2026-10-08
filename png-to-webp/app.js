@@ -19,7 +19,6 @@
     qualityRange: document.getElementById("qualityRange"),
     qualityValue: document.getElementById("qualityValue"),
     sizeTarget: document.getElementById("sizeTarget"),
-    keepNames: document.getElementById("keepNames"),
     resultsSection: document.getElementById("resultsSection"),
     resultsBody: document.getElementById("resultsBody"),
     resultsSummary: document.getElementById("resultsSummary"),
@@ -130,8 +129,7 @@
 
   function outName(file) {
     const base = file.name.replace(/\.[^.]+$/, "") || "image";
-    if (els.keepNames.checked) return `${base}.webp`;
-    return `${base}-compressed.webp`;
+    return `${base}.webp`;
   }
 
   function isImageFile(file) {

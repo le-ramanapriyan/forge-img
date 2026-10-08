@@ -59,10 +59,13 @@ body {
 }
 
 .site-header,
-main,
-.site-footer {
+main {
   width: min(1140px, calc(100% - 2.25rem));
   margin-inline: auto;
+}
+
+main {
+  padding-bottom: 2.75rem;
 }
 
 .site-header {
@@ -319,23 +322,10 @@ main,
   padding: 0.8rem 0.95rem;
 }
 
-.check-row {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin: 0.85rem 0 1.2rem;
-  font-size: 0.98rem;
-  color: var(--ink-soft);
-  cursor: pointer;
-}
-
-.check-row input {
-  accent-color: var(--accent);
-}
-
 .control-actions {
   display: grid;
   gap: 0.6rem;
+  margin-top: 0.35rem;
 }
 
 .btn {
@@ -457,16 +447,6 @@ tbody tr:last-child td {
 
 .status-err {
   color: var(--danger);
-}
-
-.site-footer {
-  padding: 0 0 2.75rem;
-  color: var(--ink-soft);
-  font-size: 0.95rem;
-}
-
-.site-footer a {
-  color: var(--accent-hot);
 }
 
 @keyframes rise {
