@@ -106,10 +106,10 @@
 
   function draw() {
     if (!previewImg) {
-      ctx.fillStyle = "#111827";
+      ctx.fillStyle = "#111111";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "#9ca3af";
-      ctx.font = "14px IBM Plex Sans, sans-serif";
+      ctx.fillStyle = "#a3a3a3";
+      ctx.font = "14px Zoho Puvi, sans-serif";
       ctx.fillText("No preview yet", 24, 40);
       return;
     }
@@ -139,7 +139,7 @@
     ctx.drawImage(previewImg, 0, 0, canvas.width, canvas.height);
     ctx.restore();
 
-    ctx.strokeStyle = "#6eb0ff";
+    ctx.strokeStyle = "#fb4446";
     ctx.lineWidth = 2;
     ctx.strokeRect(sx + 1, sy + 1, sw - 2, sh - 2);
 

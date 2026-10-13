@@ -42,7 +42,6 @@
         </span>
       </a>
       <nav class="header-nav" aria-label="Tools">${nav}</nav>
-      <p class="header-author">RAMANAPRIYAN M R V</p>
     `;
 
     const footLinks = [
@@ -60,7 +59,7 @@
         </div>
         <div class="footer-links">${footLinks}</div>
       </div>
-      <p class="footer-copy">© ${year} RAMANAPRIYAN M R V · ForgeIMG</p>
+      <p class="footer-copy">© ${year} le-ramanapriyan · ForgeIMG</p>
     `;
   }
 

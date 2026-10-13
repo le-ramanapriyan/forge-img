@@ -1,23 +1,77 @@
+@font-face {
+  font-family: "Zoho Puvi";
+  src: url("https://static.zohocdn.com/zohofonts/zohopuvi/4.0/Zoho_Puvi_Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Zoho Puvi";
+  src: url("https://static.zohocdn.com/zohofonts/zohopuvi/4.0/Zoho_Puvi_Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Zoho Puvi";
+  src: url("https://static.zohocdn.com/zohofonts/zohopuvi/4.0/Zoho_Puvi_Semibold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Zoho Puvi";
+  src: url("https://static.zohocdn.com/zohofonts/zohopuvi/4.0/Zoho_Puvi_Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  --bg-deep: #070f1c;
-  --bg-mid: #101a2e;
-  --accent: #2f8cff;
-  --accent-hot: #6eb0ff;
-  --accent-deep: #1560d4;
-  --accent-soft: rgba(47, 140, 255, 0.16);
-  --surface: #ffffff;
-  --surface-muted: #f5f8fc;
-  --ink: #0f1b2d;
-  --ink-muted: #5b6b82;
-  --ink-faint: #8a99ae;
-  --ink-on-dark: #eef3fb;
-  --ink-dark-muted: #9eb0c8;
-  --line: #d7e0ec;
-  --line-strong: #c2cfdf;
-  --line-on-dark: rgba(238, 243, 251, 0.12);
+  /* Black */
+  --black: #000000;
+  --black-hover: #272727;
+  --near-black: #111111;
+  --hairline: #222222;
+  --divider-dark: #262626;
+
+  /* White */
+  --white: #ffffff;
+  --white-hover: #e9e9e9;
+  --white-70: #ffffffb3;
+  --off-white: #f5f5f5;
+  --soft-gray: #e8e8e8;
+
+  /* Red — emphasis only: buttons, hover, selection */
+  --red: #e42527;
+  --red-hover: #c3191b;
+  --red-selection: #fb4446;
+
+  /* Roles */
+  --bg-deep: var(--black);
+  --bg-mid: var(--near-black);
+  --accent: var(--red);
+  --accent-hover: var(--red-hover);
+  --surface: var(--white);
+  --surface-muted: var(--off-white);
+  --ink: var(--near-black);
+  --ink-muted: #525252;
+  --ink-faint: #737373;
+  --ink-on-dark: var(--white);
+  --ink-dark-muted: #a3a3a3;
+  --ink-dark-faint: #737373;
+  --line: var(--soft-gray);
+  --line-strong: #a3a3a3;
+  --line-on-dark: var(--divider-dark);
+  --focus-ring: rgba(17, 17, 17, 0.14);
+  --gradient-text: linear-gradient(180deg, #ffffff 0%, #666666 100%);
   --ok: #0f8a5f;
   --ok-bg: #e8f7f1;
-  --danger: #c0392b;
+  --danger: var(--red-hover);
+
   --radius: 14px;
   --radius-sm: 9px;
   --radius-lg: 20px;
@@ -30,9 +84,8 @@
   --space-7: 3rem;
   --space-8: 4rem;
   --max: 1120px;
-  --font-display: "Instrument Serif", Georgia, serif;
-  --font-ui: "IBM Plex Sans", "Segoe UI", sans-serif;
-  --shadow: 0 1px 2px rgba(15, 27, 45, 0.05), 0 12px 32px rgba(15, 27, 45, 0.08);
-  --shadow-lg: 0 28px 70px rgba(3, 12, 28, 0.5);
-  --blue-ring: rgba(47, 140, 255, 0.28);
+  --font-display: "Zoho Puvi", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  --font-ui: "Zoho Puvi", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 12px 32px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 28px 70px rgba(0, 0, 0, 0.6);
 }

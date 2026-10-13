@@ -54,7 +54,7 @@
   `;
 
   window.ForgeIMGToolShell.mount({
-    title: "Lottie → WebP",
+    title: "Lottie fallback",
     convertLabel: "Export fallback",
     settingsHtml,
     accept:
