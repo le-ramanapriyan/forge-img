@@ -12,41 +12,54 @@
         <button type="button" class="mode-tab" data-format="image/png">PNG</button>
       </div>
     </div>
-    <div class="field" style="margin-top:1rem">
-      <span class="field-label">Compression mode</span>
-      <div class="segmented" id="modeTabs">
-        <button type="button" class="mode-tab is-active" data-mode="preset">Preset</button>
-        <button type="button" class="mode-tab" data-mode="quality">Percentage</button>
-        <button type="button" class="mode-tab" data-mode="size">Size</button>
+    <div id="lossyControls">
+      <div class="field">
+        <span class="field-label">Compression</span>
+        <div class="segmented" id="modeTabs">
+          <button type="button" class="mode-tab is-active" data-mode="preset">Preset</button>
+          <button type="button" class="mode-tab" data-mode="quality">Percentage</button>
+          <button type="button" class="mode-tab" data-mode="size">Size</button>
+        </div>
+      </div>
+      <div class="mode-panel is-active" data-panel="preset">
+        <span class="field-label">Quality preset</span>
+        <div class="preset-row">
+          <label class="chip"><input type="radio" name="preset" value="high" checked /><span>High</span><small>92%</small></label>
+          <label class="chip"><input type="radio" name="preset" value="medium" /><span>Medium</span><small>75%</small></label>
+          <label class="chip"><input type="radio" name="preset" value="low" /><span>Low</span><small>50%</small></label>
+        </div>
+      </div>
+      <div class="mode-panel" data-panel="quality">
+        <label class="field-label" for="qualityRange">Quality <strong id="qualityValue">80</strong>%</label>
+        <input id="qualityRange" type="range" min="1" max="100" value="80" />
+      </div>
+      <div class="mode-panel" data-panel="size">
+        <label class="field-label" for="sizeTarget">Max file size (KB)</label>
+        <input id="sizeTarget" type="number" min="1" max="5000" value="100" step="1" />
+        <p class="field-help">Uses the highest quality that still fits under this limit. Width and height do not change.</p>
       </div>
     </div>
-    <div class="mode-panel is-active" data-panel="preset">
-      <span class="field-label">Quality preset</span>
-      <div class="preset-row">
-        <label class="chip"><input type="radio" name="preset" value="high" checked /><span>High</span><small>92%</small></label>
-        <label class="chip"><input type="radio" name="preset" value="medium" /><span>Medium</span><small>75%</small></label>
-        <label class="chip"><input type="radio" name="preset" value="low" /><span>Low</span><small>50%</small></label>
-      </div>
-    </div>
-    <div class="mode-panel" data-panel="quality">
-      <label class="field-label" for="qualityRange">Quality <strong id="qualityValue">80</strong>%</label>
-      <input id="qualityRange" type="range" min="1" max="100" value="80" />
-    </div>
-    <div class="mode-panel" data-panel="size">
-      <label class="field-label" for="sizeTarget">Max file size (KB)</label>
-      <input id="sizeTarget" type="number" min="1" max="5000" value="100" step="1" />
-      <p class="field-help">Highest quality under this limit. PNG size mode may fail without resize.</p>
-    </div>
+    <p class="field-help" id="pngNote" hidden>
+      PNG is lossless, so quality and size targets do not apply. Dimensions stay the same.
+    </p>
   `;
 
   window.ForgeIMGToolShell.mount({
-    title: "Compress IMAGE",
+    title: "Compress images",
     convertLabel: "Compress",
     settingsHtml,
   });
 
   let format = "image/webp";
   let mode = "preset";
+  const lossyControls = document.getElementById("lossyControls");
+  const pngNote = document.getElementById("pngNote");
+
+  function syncFormatUi() {
+    const isPng = format === "image/png";
+    lossyControls.hidden = isPng;
+    pngNote.hidden = !isPng;
+  }
 
   document.getElementById("formatTabs").addEventListener("click", (e) => {
     const btn = e.target.closest("[data-format]");
@@ -55,6 +68,7 @@
     document.querySelectorAll("#formatTabs .mode-tab").forEach((b) => {
       b.classList.toggle("is-active", b === btn);
     });
+    syncFormatUi();
   });
 
   document.getElementById("modeTabs").addEventListener("click", (e) => {
@@ -80,6 +94,9 @@
   }
 
   function getSetting() {
+    if (format === "image/png") {
+      return { kind: "quality", quality: 1, label: "lossless" };
+    }
     if (mode === "preset") {
       const key =
         document.querySelector('input[name="preset"]:checked')?.value || "high";
@@ -96,18 +113,22 @@
   F.createToolApp({
     convertLabel: "Compress",
     zipName: "forgeimg-compress.zip",
-    async process(files) {
+    async process(files, report) {
       if (!F.supportsFormat(format)) {
         throw new Error("This browser cannot encode the selected format.");
       }
       const setting = getSetting();
       const rows = [];
-      for (const file of files) {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        report?.(i, files.length, file.name);
         try {
           const img = await F.loadImage(file);
           const canvas = F.canvasFromImage(img);
           let encoded;
-          if (setting.kind === "size") {
+          if (format === "image/png") {
+            encoded = await F.encodeAtQuality(canvas, format, 1);
+          } else if (setting.kind === "size") {
             encoded = await F.encodeToSize(canvas, format, setting.maxBytes);
           } else {
             encoded = await F.encodeAtQuality(canvas, format, setting.quality);

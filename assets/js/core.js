@@ -24,7 +24,7 @@
     ) {
       return true;
     }
-    return /\.zip$/i.test(file.name);
+    return /\.(zip|lottie)$/i.test(file.name);
   }
 
   function escapeHtml(s) {
@@ -75,8 +75,20 @@
 
   function canvasToBlob(canvas, mime, quality) {
     return new Promise((resolve, reject) => {
+      let target = canvas;
+      // JPEG has no alpha. Composite onto white so transparent pixels
+      // do not turn black.
+      if (mime === "image/jpeg") {
+        target = document.createElement("canvas");
+        target.width = canvas.width;
+        target.height = canvas.height;
+        const ctx = target.getContext("2d");
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, target.width, target.height);
+        ctx.drawImage(canvas, 0, 0);
+      }
       const q = mime === "image/png" ? undefined : quality;
-      canvas.toBlob(
+      target.toBlob(
         (blob) => {
           if (!blob) reject(new Error("Encode failed"));
           else resolve(blob);
@@ -139,18 +151,19 @@
     const zip = new JSZip();
     const used = new Map();
     for (const f of files) {
-      let name = f.name;
-      const n = (used.get(name) || 0) + 1;
-      used.set(name, n);
-      if (n > 1) {
-        const parts = name.split(".");
-        const ext = parts.pop();
-        name = `${parts.join(".")}-${n}.${ext}`;
-      }
-      zip.file(name, f.blob);
+      zip.file(uniqueZipName(f.name, used), f.blob);
     }
     const blob = await zip.generateAsync({ type: "blob" });
     downloadBlob(blob, zipName || "forgeimg.zip");
+  }
+
+  function uniqueZipName(name, used) {
+    const count = (used.get(name) || 0) + 1;
+    used.set(name, count);
+    if (count === 1) return name;
+    const dot = name.lastIndexOf(".");
+    if (dot <= 0) return `${name}-${count}`;
+    return `${name.slice(0, dot)}-${count}${name.slice(dot)}`;
   }
 
   function fileKey(f) {
@@ -246,9 +259,15 @@
     for (const file of list) {
       if (isZipFile(file)) {
         stats.zips += 1;
-        const fromZip = await unzipToImages(file);
-        stats.fromZip += fromZip.length;
-        images.push(...fromZip);
+        try {
+          const fromZip = await unzipToImages(file);
+          stats.fromZip += fromZip.length;
+          if (!fromZip.length) stats.emptyZips = (stats.emptyZips || 0) + 1;
+          images.push(...fromZip);
+        } catch (err) {
+          stats.zipErrors = (stats.zipErrors || 0) + 1;
+          stats.zipErrorMessage = err.message || String(err);
+        }
         continue;
       }
       if (isImageFile(file)) {
@@ -269,13 +288,82 @@
     return { images, zipCount: stats.zips, stats };
   }
 
+  function withRelativePath(file, rel) {
+    if (!rel || rel === file.name) return file;
+    try {
+      Object.defineProperty(file, "webkitRelativePath", {
+        value: rel,
+        configurable: true,
+      });
+      return file;
+    } catch {
+      return file;
+    }
+  }
+
+  function readAllEntries(reader) {
+    return new Promise((resolve, reject) => {
+      const all = [];
+      const next = () => {
+        reader.readEntries((batch) => {
+          if (!batch.length) resolve(all);
+          else {
+            all.push(...batch);
+            next();
+          }
+        }, reject);
+      };
+      next();
+    });
+  }
+
+  async function walkEntry(entry, prefix, out) {
+    if (entry.isFile) {
+      const file = await new Promise((resolve, reject) => entry.file(resolve, reject));
+      const rel = prefix ? `${prefix}/${file.name}` : file.name;
+      out.push(withRelativePath(file, rel));
+      return;
+    }
+    if (!entry.isDirectory) return;
+    const nextPrefix = prefix ? `${prefix}/${entry.name}` : entry.name;
+    const children = await readAllEntries(entry.createReader());
+    for (const child of children) {
+      await walkEntry(child, nextPrefix, out);
+    }
+  }
+
+  async function filesFromDataTransfer(dt) {
+    const items = Array.from(dt?.items || []);
+    const entries = items
+      .map((item) => item.webkitGetAsEntry?.())
+      .filter(Boolean);
+    if (!entries.length) return Array.from(dt?.files || []);
+    const out = [];
+    for (const entry of entries) {
+      await walkEntry(entry, "", out);
+    }
+    return out;
+  }
+
   function bindDropzone(dropzone, fileInput, folderInput, onFiles) {
     const add = (list) => {
       if (list?.length) onFiles(list);
     };
 
-    fileInput?.addEventListener("change", () => add(fileInput.files));
-    folderInput?.addEventListener("change", () => add(folderInput.files));
+    fileInput?.addEventListener("change", () => {
+      add(fileInput.files);
+      fileInput.value = "";
+    });
+    folderInput?.addEventListener("change", () => {
+      add(folderInput.files);
+      folderInput.value = "";
+    });
+
+    window.addEventListener("dragover", (e) => e.preventDefault());
+    window.addEventListener("drop", (e) => {
+      if (e.target instanceof Node && dropzone.contains(e.target)) return;
+      e.preventDefault();
+    });
 
     const folderBtn = document.getElementById("folderPickBtn");
     folderBtn?.addEventListener("click", (e) => {
@@ -285,15 +373,8 @@
     });
 
     dropzone.addEventListener("click", (e) => {
-      if (e.target.closest("label") || e.target.closest("#folderPickBtn")) return;
+      if (e.target.closest("label") || e.target.closest("button")) return;
       fileInput?.click();
-    });
-
-    dropzone.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        fileInput?.click();
-      }
     });
 
     ["dragenter", "dragover"].forEach((type) => {
@@ -311,7 +392,9 @@
     });
 
     dropzone.addEventListener("drop", (e) => {
-      add(e.dataTransfer?.files);
+      filesFromDataTransfer(e.dataTransfer).then(add).catch(() => {
+        add(e.dataTransfer?.files);
+      });
     });
   }
 
@@ -340,11 +423,30 @@
       resultsBody: document.getElementById("resultsBody"),
       resultsSummary: document.getElementById("resultsSummary"),
       downloadAllBtn: document.getElementById("downloadAllBtn"),
+      fileList: document.getElementById("fileList"),
+      toolError: document.getElementById("toolError"),
+      workStatus: document.getElementById("workStatus"),
     };
 
     let busy = false;
 
+    const acceptFile = config.acceptFile || isAcceptableInput;
+    const emptySummaryText =
+      config.emptySummary || "No images selected yet.";
+
+    function mergeAccepted(existing, fileList) {
+      const incoming = Array.from(fileList || []).filter(acceptFile);
+      const map = new Map(existing.map((f) => [fileKey(f), f]));
+      for (const f of incoming) {
+        map.set(fileKey(f), f);
+      }
+      return Array.from(map.values());
+    }
+
     function queueLabel(files) {
+      if (typeof config.queueLabel === "function") {
+        return config.queueLabel(files);
+      }
       const s = summarizeQueue(files);
       const parts = [];
       if (s.images) parts.push(`${s.images} file${s.images === 1 ? "" : "s"}`);
@@ -357,49 +459,102 @@
       return parts.length ? parts.join(" · ") : "Nothing selected";
     }
 
+    function showError(msg) {
+      if (!els.toolError) return;
+      els.toolError.hidden = !msg;
+      els.toolError.textContent = msg || "";
+    }
+
+    function showStatus(msg) {
+      if (!els.workStatus) return;
+      els.workStatus.hidden = !msg;
+      els.workStatus.textContent = msg || "";
+    }
+
     function updateSummary() {
       if (!els.fileSummary) return;
       if (!state.files.length) {
-        els.fileSummary.textContent = "No images selected yet.";
+        els.fileSummary.textContent = emptySummaryText;
         return;
       }
       const total = state.files.reduce((s, f) => s + f.size, 0);
+      const s = summarizeQueue(state.files);
+      const zipNote = s.zips ? " · ZIP opens when you process" : "";
       els.fileSummary.textContent = `${queueLabel(state.files)} · ${humanBytes(
         total
-      )} · ZIP unpacks on process`;
+      )}${zipNote}`;
+    }
+
+    function renderFileList() {
+      if (!els.fileList) return;
+      els.fileList.hidden = state.files.length === 0;
+      els.fileList.replaceChildren();
+      for (const file of state.files) {
+        const li = document.createElement("li");
+        const kind = isZipFile(file)
+          ? "ZIP"
+          : isImageFile(file)
+            ? "Image"
+            : "File";
+        li.innerHTML = `
+          <span class="file-list-name">${escapeHtml(file.name)}</span>
+          <span class="file-list-meta">${kind} · ${humanBytes(file.size)}</span>`;
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "file-remove";
+        btn.dataset.remove = fileKey(file);
+        btn.setAttribute("aria-label", `Remove ${file.name}`);
+        btn.textContent = "Remove";
+        li.appendChild(btn);
+        els.fileList.appendChild(li);
+      }
+    }
+
+    function renderQueue() {
+      renderDropCount(
+        els.dropzone,
+        state.files.length,
+        state.files.length ? queueLabel(state.files) : ""
+      );
+      updateSummary();
+      renderFileList();
+      syncFooter();
+      config.onFilesChanged?.(state.files);
     }
 
     function setFiles(list) {
       if (!list?.length || busy) return;
-      const before = state.files.length;
-      state.files = mergeFiles(state.files, list);
-      if (state.files.length === before) {
-        alert("No supported images or ZIP files found.");
+      const incoming = Array.from(list).filter(acceptFile);
+      if (!incoming.length) {
+        showError(
+          config.rejectMessage || "No supported images or ZIP files found."
+        );
+        return;
       }
-      renderDropCount(els.dropzone, state.files.length, queueLabel(state.files));
-      updateSummary();
-      syncFooter();
-      config.onFilesChanged?.(state.files);
+      showError("");
+      state.files = mergeAccepted(state.files, incoming);
+      renderQueue();
     }
 
     function syncFooter() {
       const idx = STEPS.indexOf(state.step);
       const hasFiles = state.files.length > 0;
-      const hasOkResults = state.results.some((r) => r.ok);
+      const okCount = state.results.filter((r) => r.ok).length;
       const hasAnyWork = hasFiles || state.results.length > 0;
 
-      // Only show buttons that are useful for the current step/state
       els.clearBtn.hidden = !hasAnyWork;
       els.backBtn.hidden = idx === 0;
-      els.nextBtn.hidden = !(state.step === "upload" && hasFiles);
-      els.convertBtn.hidden = !(state.step === "settings" && hasFiles);
-      els.downloadAllBtn.hidden = !(state.step === "results" && hasOkResults);
+      els.nextBtn.hidden = state.step !== "upload";
+      els.convertBtn.hidden = state.step !== "settings";
+      els.downloadAllBtn.hidden = state.step !== "results";
 
-      els.clearBtn.disabled = false;
-      els.backBtn.disabled = false;
-      els.nextBtn.disabled = false;
-      els.convertBtn.disabled = busy;
-      els.downloadAllBtn.disabled = false;
+      els.clearBtn.disabled = busy;
+      els.backBtn.disabled = busy;
+      els.nextBtn.disabled = !hasFiles || busy;
+      els.convertBtn.disabled = !hasFiles || busy;
+      els.downloadAllBtn.disabled = okCount === 0 || busy;
+      els.downloadAllBtn.textContent = okCount === 1 ? "Download" : "Download ZIP";
+      els.dropzone?.classList.toggle("is-busy", busy);
 
       document.querySelectorAll("[data-step-btn]").forEach((btn) => {
         const step = btn.dataset.stepBtn;
@@ -428,17 +583,20 @@
       state.results = [];
       if (els.fileInput) els.fileInput.value = "";
       if (els.folderInput) els.folderInput.value = "";
-      els.resultsBody.innerHTML = "";
+      els.resultsBody.replaceChildren();
       els.resultsEmpty.hidden = false;
       els.resultsContent.hidden = true;
+      showError("");
+      showStatus("");
       renderDropCount(els.dropzone, 0);
       updateSummary();
+      renderFileList();
       setStep("upload");
       config.onClear?.();
     }
 
     function renderResults(summaryText) {
-      els.resultsBody.innerHTML = "";
+      els.resultsBody.replaceChildren();
       if (!state.results.length) {
         els.resultsEmpty.hidden = false;
         els.resultsContent.hidden = true;
@@ -449,14 +607,15 @@
       els.resultsSummary.textContent = summaryText || "";
 
       for (const r of state.results) {
-        const tr = document.createElement("tr");
+        const li = document.createElement("li");
+        li.className = "result-card";
         if (!r.ok) {
-          tr.innerHTML = `
-            <td>${escapeHtml(r.originalName)}</td>
-            <td>${humanBytes(r.originalSize)}</td>
-            <td colspan="3" class="status-err">${escapeHtml(r.error)}</td>
-            <td></td>`;
-          els.resultsBody.appendChild(tr);
+          li.innerHTML = `
+            <div class="result-copy">
+              <p class="result-name">${escapeHtml(r.originalName)}</p>
+              <p class="result-meta status-err">${escapeHtml(r.error)}</p>
+            </div>`;
+          els.resultsBody.appendChild(li);
           continue;
         }
 
@@ -467,65 +626,100 @@
           (r.savedPct != null
             ? ` (${Math.abs(r.savedPct).toFixed(0)}%)`
             : "");
+        const meta = [r.meta, r.detail].filter(Boolean).join(" · ");
 
-        tr.innerHTML = `
-          <td>
-            <div>${escapeHtml(r.name)}</div>
-            <small style="color:var(--ink-faint)">${escapeHtml(r.meta || "")}</small>
-          </td>
-          <td>${humanBytes(r.originalSize)}</td>
-          <td>${humanBytes(r.outSize)}</td>
-          <td class="${savedClass}">${savedText}</td>
-          <td>${escapeHtml(String(r.detail ?? "—"))}</td>
-          <td></td>`;
+        li.innerHTML = `
+          <div class="result-copy">
+            <p class="result-name">${escapeHtml(r.name)}</p>
+            <p class="result-meta">${escapeHtml(meta)}</p>
+            <p class="result-sizes">
+              <span>${humanBytes(r.originalSize)} → ${humanBytes(r.outSize)}</span>
+              <span class="${savedClass}">${savedText}</span>
+            </p>
+          </div>`;
 
         const a = document.createElement("a");
         a.className = "btn btn-secondary btn-tiny";
         a.href = r.url;
         a.download = r.name;
         a.textContent = "Download";
-        tr.lastElementChild.appendChild(a);
-        els.resultsBody.appendChild(tr);
+        li.appendChild(a);
+        els.resultsBody.appendChild(li);
       }
+    }
+
+    function sourceNoteFrom(stats) {
+      if (stats?.note) return ` · ${stats.note}`;
+      const sourceBits = [];
+      if (stats?.looseFiles) {
+        sourceBits.push(
+          `${stats.looseFiles} file${stats.looseFiles === 1 ? "" : "s"}`
+        );
+      }
+      if (stats?.folderFiles) {
+        sourceBits.push(
+          `${stats.folderFiles} from folder`
+        );
+      }
+      if (stats?.zips) {
+        sourceBits.push(
+          `${stats.zips} ZIP → ${stats.fromZip} image${stats.fromZip === 1 ? "" : "s"}`
+        );
+      }
+      if (stats?.zipErrors) {
+        sourceBits.push(
+          `${stats.zipErrors} ZIP could not be read`
+        );
+      }
+      return sourceBits.length ? ` · ${sourceBits.join(", ")}` : "";
     }
 
     async function runConvert() {
       if (!state.files.length || busy) return;
       busy = true;
-      els.convertBtn.textContent = "Checking inputs…";
+      showError("");
+      els.convertBtn.textContent = "Checking files…";
       syncFooter();
       state.results.forEach((r) => r.url && URL.revokeObjectURL(r.url));
       state.results = [];
 
       try {
-        // Detect file / folder / ZIP, unzip ZIPs, then process images only
-        const { images, stats } = await resolveProcessQueue(state.files);
-        if (!images.length) {
+        let items;
+        let stats;
+        if (typeof config.resolveQueue === "function") {
+          ({ items, stats } = await config.resolveQueue(state.files));
+        } else {
+          const resolved = await resolveProcessQueue(state.files);
+          items = resolved.images;
+          stats = resolved.stats;
+        }
+        if (!items?.length) {
           throw new Error(
-            stats.zips
-              ? "ZIP checked — no images found inside."
-              : "No images found to process."
+            stats?.zipErrorMessage ||
+              (typeof config.emptyQueueError === "function"
+                ? config.emptyQueueError(stats)
+                : null) ||
+              (stats?.zips
+                ? "No images were found in that ZIP."
+                : "No images found to process.")
           );
         }
 
+        showStatus(`Working… 0 of ${items.length}`);
         els.convertBtn.textContent = "Working…";
-        const { rows, summary } = await config.process(images);
-        const sourceBits = [];
-        if (stats.looseFiles) sourceBits.push(`${stats.looseFiles} file(s)`);
-        if (stats.folderFiles) sourceBits.push(`${stats.folderFiles} folder file(s)`);
-        if (stats.zips) {
-          sourceBits.push(
-            `${stats.zips} ZIP → ${stats.fromZip} image(s)`
-          );
-        }
-        const sourceNote = sourceBits.length
-          ? ` · sources: ${sourceBits.join(", ")}`
-          : "";
+        const report = (index, total, label) => {
+          const n = index + 1;
+          els.convertBtn.textContent = `${n} / ${total}`;
+          showStatus(label ? `${label} · ${n} of ${total}` : `Working… ${n} of ${total}`);
+        };
+        const { rows, summary } = await config.process(items, report);
         state.results = rows;
-        renderResults((summary || "") + sourceNote);
+        renderResults((summary || "") + sourceNoteFrom(stats));
+        showStatus("");
         setStep("results");
       } catch (err) {
-        alert(err.message || String(err));
+        showStatus("");
+        showError(err.message || String(err));
       }
 
       busy = false;
@@ -538,11 +732,21 @@
 
     document.querySelectorAll("[data-step-btn]").forEach((btn) => {
       btn.addEventListener("click", () => {
+        if (busy) return;
         const step = btn.dataset.stepBtn;
         if (step === "settings" && !state.files.length) return;
         if (step === "results" && !state.results.length) return;
+        showError("");
         setStep(step);
       });
+    });
+
+    els.fileList?.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-remove]");
+      if (!btn || busy) return;
+      state.files = state.files.filter((f) => fileKey(f) !== btn.dataset.remove);
+      showError("");
+      renderQueue();
     });
 
     els.nextBtn.addEventListener("click", () => {
@@ -556,6 +760,11 @@
     els.clearBtn.addEventListener("click", () => clearAll());
     els.downloadAllBtn.addEventListener("click", () => {
       const ok = state.results.filter((r) => r.ok && r.blob);
+      if (!ok.length) return;
+      if (ok.length === 1) {
+        downloadBlob(ok[0].blob, ok[0].name);
+        return;
+      }
       const zipName =
         typeof config.zipName === "function"
           ? config.zipName()

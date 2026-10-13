@@ -11,12 +11,12 @@
 
   const settingsHtml = `
     <div class="field">
-      <label class="field-label" for="targetFormat">Convert to</label>
-      <select id="targetFormat">
-        <option value="image/webp" selected>WebP</option>
-        <option value="image/png">PNG</option>
-        <option value="image/jpeg">JPEG</option>
-      </select>
+      <span class="field-label">Convert to</span>
+      <div class="segmented" id="formatTabs">
+        <button type="button" class="mode-tab is-active" data-format="image/webp">WebP</button>
+        <button type="button" class="mode-tab" data-format="image/jpeg">JPEG</button>
+        <button type="button" class="mode-tab" data-format="image/png">PNG</button>
+      </div>
     </div>
     <div id="lossyControls">
       <div class="field" style="margin-top:1rem">
@@ -42,11 +42,11 @@
       <div class="mode-panel" data-panel="size">
         <label class="field-label" for="sizeTarget">Max file size (KB)</label>
         <input id="sizeTarget" type="number" min="1" max="5000" value="100" step="1" />
-        <p class="field-help">Finds the highest quality under this limit. Dimensions stay the same.</p>
+        <p class="field-help">Uses the highest quality that still fits under this limit. Width and height do not change.</p>
       </div>
     </div>
-    <p class="field-help" id="pngNote" hidden style="margin-top:1rem">
-      PNG is lossless — quality and size targets do not apply.
+    <p class="field-help" id="pngNote" hidden>
+      PNG is lossless, so quality and size targets do not apply. Dimensions stay the same.
     </p>
   `;
 
@@ -57,14 +57,14 @@
   });
 
   let mode = "preset";
-  const formatSelect = document.getElementById("targetFormat");
+  let format = "image/webp";
   const lossyControls = document.getElementById("lossyControls");
   const pngNote = document.getElementById("pngNote");
   const convertBtn = document.getElementById("convertBtn");
   const modalTitle = document.getElementById("modalTitle");
 
   function currentFormat() {
-    return formatSelect.value || "image/webp";
+    return format || "image/webp";
   }
 
   function formatMeta(mime) {
@@ -82,7 +82,15 @@
     if (convertBtn) convertBtn.textContent = label;
   }
 
-  formatSelect.addEventListener("change", syncFormatUi);
+  document.getElementById("formatTabs").addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-format]");
+    if (!btn) return;
+    format = btn.dataset.format;
+    document.querySelectorAll("#formatTabs .mode-tab").forEach((b) => {
+      b.classList.toggle("is-active", b === btn);
+    });
+    syncFormatUi();
+  });
 
   document.getElementById("modeTabs").addEventListener("click", (e) => {
     const btn = e.target.closest("[data-mode]");
@@ -122,7 +130,7 @@
       const meta = formatMeta(currentFormat());
       return `forgeimg-convert-${meta.ext}.zip`;
     },
-    async process(files) {
+    async process(files, report) {
       const mime = currentFormat();
       const meta = formatMeta(mime);
       if (!F.supportsFormat(mime)) {
@@ -135,7 +143,9 @@
         : getSetting();
 
       const rows = [];
-      for (const file of files) {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        report?.(i, files.length, file.name);
         try {
           const img = await F.loadImage(file);
           const canvas = F.canvasFromImage(img);

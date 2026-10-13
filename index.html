@@ -6,7 +6,7 @@
     <title>ForgeIMG — On-device image tools</title>
     <meta
       name="description"
-      content="ForgeIMG: compress, convert formats, resize, and crop images in your browser."
+      content="ForgeIMG: compress, convert formats, resize, crop, and Lottie fallbacks in your browser."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -23,52 +23,72 @@
       <header class="site-header" id="site-header"></header>
       <main class="site-main">
         <section class="hero">
-          <p class="eyebrow">Private · on-device processing</p>
+          <p class="eyebrow">On your device</p>
           <h1>Every essential image tool, forged for speed</h1>
           <p class="lede">
-            Compress, convert formats, resize, and crop — entirely in your
-            browser. Nothing is uploaded.
+            Compress, convert, resize, and crop images, or export a still from
+            a Lottie file. Processing stays in your browser — nothing is uploaded.
           </p>
           <div class="hero-actions">
             <a class="btn btn-primary btn-lg" href="compress/">Start with Compress</a>
-            <a class="btn btn-secondary btn-lg" href="convert/">Convert formats</a>
+            <a class="btn btn-secondary btn-lg" href="convert/">Convert images</a>
           </div>
         </section>
 
         <p class="section-label">Tools</p>
         <section class="tool-grid" aria-label="ForgeIMG tools">
           <a class="tool-card" href="compress/">
-            <div class="tool-card-icon" aria-hidden="true">C</div>
-            <h2>Compress IMAGE</h2>
+            <div class="tool-card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 9l5 3-5 3"/><path d="M20 9l-5 3 5 3"/><path d="M9 12h6"/></svg>
+            </div>
+            <h2>Compress images</h2>
             <p>
-              Shrink JPG, PNG, or WebP with presets, quality %, or a max file
-              size target.
+              Shrink JPEG, PNG, or WebP with a preset, a quality percentage, or
+              a maximum file size. Dimensions stay the same.
             </p>
             <span class="tool-card-cta">Open tool →</span>
           </a>
           <a class="tool-card" href="convert/">
-            <div class="tool-card-icon" aria-hidden="true">W</div>
-            <h2>Convert IMAGE</h2>
+            <div class="tool-card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 7h11"/><path d="M12 4l4 3-4 3"/><path d="M20 17H9"/><path d="M12 14l-4 3 4 3"/></svg>
+            </div>
+            <h2>Convert images</h2>
             <p>
-              Convert to WebP, PNG, or JPEG from a dropdown — with presets,
-              quality %, or a target file size.
+              Save as WebP, JPEG, or PNG. Keep the original file name and choose
+              a preset, a percentage, or a target size.
             </p>
             <span class="tool-card-cta">Open tool →</span>
           </a>
           <a class="tool-card" href="resize/">
-            <div class="tool-card-icon" aria-hidden="true">R</div>
-            <h2>Resize IMAGE</h2>
+            <div class="tool-card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 9V4h5"/><path d="M20 9V4h-5"/><path d="M4 15v5h5"/><path d="M20 15v5h-5"/></svg>
+            </div>
+            <h2>Resize images</h2>
             <p>
-              Scale by pixels or percent. Lock aspect ratio to keep proportions
-              clean.
+              Set width and height in pixels, or scale by percent. Lock the
+              aspect ratio so nothing gets stretched.
             </p>
             <span class="tool-card-cta">Open tool →</span>
           </a>
           <a class="tool-card" href="crop/">
-            <div class="tool-card-icon" aria-hidden="true">K</div>
-            <h2>Crop IMAGE</h2>
+            <div class="tool-card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M6 3v15h15"/><path d="M3 6h15v15"/></svg>
+            </div>
+            <h2>Crop images</h2>
             <p>
-              Crop with free selection or fixed ratios — 1:1, 16:9, and 4:3.
+              Draw the area to keep. Use a free selection, or lock the frame to
+              1:1, 4:3, or 16:9.
+            </p>
+            <span class="tool-card-cta">Open tool →</span>
+          </a>
+          <a class="tool-card" href="lottie/">
+            <div class="tool-card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9.5v5l5-2.5-5-2.5z"/></svg>
+            </div>
+            <h2>Lottie fallback</h2>
+            <p>
+              Export the first frame of a Lottie file as WebP, JPEG, or PNG at
+              the original composition size.
             </p>
             <span class="tool-card-cta">Open tool →</span>
           </a>

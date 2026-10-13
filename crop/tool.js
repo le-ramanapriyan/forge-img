@@ -19,7 +19,7 @@
         <div class="crop-canvas-wrap">
           <canvas id="cropCanvas" width="640" height="360"></canvas>
         </div>
-        <p class="field-help" id="cropHint">Upload images, then drag on the canvas to set the crop.</p>
+        <p class="field-help" id="cropHint">Add an image, then drag on the preview. A small click keeps the current crop.</p>
       </div>
     </div>
     <div class="field" style="margin-top:1rem">
@@ -33,7 +33,7 @@
   `;
 
   window.ForgeIMGToolShell.mount({
-    title: "Crop IMAGE",
+    title: "Crop images",
     convertLabel: "Crop",
     settingsHtml,
   });
@@ -44,6 +44,8 @@
   let scale = 1;
   let selection = null; // image-space coords {x,y,w,h}
   let drag = null;
+  let beforeDrag = null;
+  let previewToken = 0;
 
   const canvas = document.getElementById("cropCanvas");
   const ctx = canvas.getContext("2d");
@@ -162,17 +164,19 @@
     if (aspect !== "free") {
       const ratio = Number(aspect);
       h = w / ratio;
-      if (h < 8) {
-        h = 8;
-        w = h * ratio;
-      }
     }
-    if (x < 0) x = 0;
-    if (y < 0) y = 0;
-    if (x + w > iw) x = Math.max(0, iw - w);
-    if (y + h > ih) y = Math.max(0, ih - h);
-    if (x + w > iw) w = iw - x;
-    if (y + h > ih) h = ih - y;
+    if (w > iw) {
+      w = iw;
+      if (aspect !== "free") h = w / Number(aspect);
+    }
+    if (h > ih) {
+      h = ih;
+      if (aspect !== "free") w = h * Number(aspect);
+    }
+    w = Math.max(8, Math.min(w, iw));
+    h = Math.max(8, Math.min(h, ih));
+    x = Math.min(Math.max(0, x), Math.max(0, iw - w));
+    y = Math.min(Math.max(0, y), Math.max(0, ih - h));
     return {
       x: Math.round(x),
       y: Math.round(y),
@@ -185,6 +189,7 @@
     if (!previewImg) return;
     canvas.setPointerCapture(e.pointerId);
     const p = canvasPoint(e);
+    beforeDrag = selection ? { ...selection } : null;
     drag = { x0: p.x, y0: p.y };
     selection = { x: p.x, y: p.y, w: 1, h: 1 };
     draw();
@@ -209,36 +214,48 @@
   });
 
   canvas.addEventListener("pointerup", () => {
+    if (selection && beforeDrag && selection.w < 12 && selection.h < 12) {
+      selection = beforeDrag;
+      draw();
+    }
     drag = null;
+    beforeDrag = null;
   });
 
   async function loadPreview(files) {
+    const token = ++previewToken;
     if (!files.length) {
       previewImg = null;
       selection = null;
       draw();
       return;
     }
-    // Prefer a loose/folder image; if only ZIPs, unpack first ZIP for preview
-    let previewFile = files.find(
-      (f) => F.isImageFile(f) && !F.isZipFile(f)
-    );
-    if (!previewFile) {
-      const zip = files.find((f) => F.isZipFile(f));
-      if (zip) {
-        const { images } = await F.resolveProcessQueue([zip]);
-        previewFile = images[0];
+    let previewFile = files.find((f) => F.isImageFile(f) && !F.isZipFile(f));
+    try {
+      if (!previewFile) {
+        const zip = files.find((f) => F.isZipFile(f));
+        if (zip) {
+          const { images } = await F.resolveProcessQueue([zip]);
+          previewFile = images[0];
+        }
       }
-    }
-    if (!previewFile) {
+      if (token !== previewToken) return;
+      if (!previewFile) {
+        previewImg = null;
+        selection = null;
+        draw();
+        return;
+      }
+      previewImg = await F.loadImage(previewFile);
+      if (token !== previewToken) return;
+      resetDefaultSelection();
+      draw();
+    } catch {
+      if (token !== previewToken) return;
       previewImg = null;
       selection = null;
       draw();
-      return;
     }
-    previewImg = await F.loadImage(previewFile);
-    resetDefaultSelection();
-    draw();
   }
 
   F.createToolApp({
@@ -251,11 +268,12 @@
       if (step === "settings" && state.files.length) loadPreview(state.files);
     },
     onClear: () => {
+      previewToken += 1;
       previewImg = null;
       selection = null;
       draw();
     },
-    async process(files) {
+    async process(files, report) {
       if (!F.supportsFormat(format)) {
         throw new Error("This browser cannot encode the selected format.");
       }
@@ -266,7 +284,9 @@
       const rows = [];
       const cropBox = { ...selection };
 
-      for (const file of files) {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        report?.(i, files.length, file.name);
         try {
           const img = await F.loadImage(file);
           const iw = img.naturalWidth;
@@ -336,7 +356,15 @@
       const ok = rows.filter((r) => r.ok);
       return {
         rows,
-        summary: `${ok.length}/${rows.length} cropped · aspect ${aspect}`,
+        summary: `${ok.length}/${rows.length} cropped · ${
+          aspect === "free"
+            ? "free"
+            : aspect === "1"
+              ? "1:1"
+              : aspect === "1.777"
+                ? "16:9"
+                : "4:3"
+        }`,
       };
     },
   });

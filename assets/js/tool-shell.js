@@ -9,6 +9,19 @@
     const root = document.getElementById("tool-workspace");
     if (!root) return;
 
+    const accept =
+      options.accept ||
+      "image/*,.zip,application/zip,application/x-zip-compressed";
+    const folderAccept = options.folderAccept || "image/*";
+    const dropHint =
+      options.dropHint || "JPEG, PNG, WebP, GIF, a folder, or a ZIP";
+    const selectLabel = options.selectLabel || "Select images";
+    const dropAria =
+      options.dropAria || "Drop images or choose files";
+    const emptySummary = options.emptySummary || "No images selected yet.";
+    const resultsEmpty =
+      options.resultsEmpty || "Processed files will show up here.";
+
     root.innerHTML = `
     <aside class="workspace-panel" aria-label="${options.title} workspace">
       <header class="modal-header workspace-header">
@@ -31,19 +44,21 @@
       </nav>
 
       <div class="modal-body workspace-body">
+        <p class="tool-error" id="toolError" role="alert" hidden></p>
+        <p class="work-status" id="workStatus" aria-live="polite" hidden></p>
         <section class="step-view is-active" data-step="upload">
-          <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Drop images or choose files">
+          <div class="dropzone" id="dropzone" aria-label="${dropAria}">
             <div class="dropzone-inner">
               <div class="drop-icon" aria-hidden="true">↑</div>
-              <p class="dropzone-title">Drop files, folder, or ZIP</p>
-              <p class="dropzone-hint">PNG, JPEG, GIF, WebP, ZIP · process detects type</p>
+              <p class="dropzone-title">Drop files, a folder, or a ZIP</p>
+              <p class="dropzone-hint">${dropHint}</p>
               <div class="dropzone-actions">
                 <label class="btn btn-primary">
-                  Select images
+                  ${selectLabel}
                   <input
                     id="fileInput"
                     type="file"
-                    accept="image/*,.zip,application/zip,application/x-zip-compressed"
+                    accept="${accept}"
                     multiple
                     hidden
                   />
@@ -51,7 +66,7 @@
                 <input
                   id="folderInput"
                   type="file"
-                  accept="image/*"
+                  accept="${folderAccept}"
                   multiple
                   webkitdirectory
                   directory
@@ -63,36 +78,23 @@
               </button>
             </div>
           </div>
+          <ul class="file-list" id="fileList" hidden></ul>
         </section>
 
         <section class="step-view" data-step="settings">
           <div class="settings-stack">
             ${options.settingsHtml}
-            <div class="settings-note" id="fileSummary">No images selected yet.</div>
+            <div class="settings-note" id="fileSummary" aria-live="polite">${emptySummary}</div>
           </div>
         </section>
 
         <section class="step-view" data-step="results" id="resultsSection">
           <div class="results-empty" id="resultsEmpty">
-            <p>Process images to see results here.</p>
+            <p>${resultsEmpty}</p>
           </div>
           <div class="results-content" id="resultsContent" hidden>
-            <p class="results-summary" id="resultsSummary"></p>
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>File</th>
-                    <th>Original</th>
-                    <th>Output</th>
-                    <th>Saved</th>
-                    <th>Detail</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody id="resultsBody"></tbody>
-              </table>
-            </div>
+            <p class="results-summary" id="resultsSummary" aria-live="polite"></p>
+            <ul class="result-list" id="resultsBody"></ul>
           </div>
         </section>
       </div>
@@ -102,7 +104,7 @@
         <div class="footer-right">
           <button type="button" class="btn btn-secondary" id="backBtn" hidden>Back</button>
           <button type="button" class="btn btn-secondary" id="downloadAllBtn" hidden>Download ZIP</button>
-          <button type="button" class="btn btn-primary" id="nextBtn" hidden>Continue</button>
+          <button type="button" class="btn btn-primary" id="nextBtn">Continue</button>
           <button type="button" class="btn btn-primary" id="convertBtn" hidden>
             ${options.convertLabel || "Process"}
           </button>

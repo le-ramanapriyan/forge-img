@@ -35,7 +35,7 @@ Defined in `assets/css/tokens.css`:
 ## Layout
 
 - Shell width: `min(1120px, 100% - 2rem)`.
-- Home: hero + 2×2 tool card grid (1 col on small screens).
+- Home: hero + tool card grid (3 columns, 2 on medium screens, 1 on small screens).
 - Tool pages: short intro + primary CTA → modal workspace.
 
 ## Components

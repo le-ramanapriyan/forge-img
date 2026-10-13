@@ -24,13 +24,14 @@
       </div>
       <label class="check-inline" style="margin-top:0.75rem">
         <input id="lockAspect" type="checkbox" checked />
-        <span>Lock aspect ratio (uses width; height auto)</span>
+        <span>Lock aspect ratio</span>
       </label>
+      <p class="field-help" id="pixelHelp">Height follows width. Each image keeps its own proportions. The height shown is for the first image.</p>
     </div>
     <div class="mode-panel" data-panel="percent">
-      <label class="field-label" for="scalePct">Scale <strong id="scaleValue">50</strong>%</label>
-      <input id="scalePct" type="range" min="1" max="200" value="50" />
-      <p class="field-help">Applied to both width and height of each image.</p>
+      <label class="field-label" for="scalePct">Scale <strong id="scaleValue">100</strong>%</label>
+      <input id="scalePct" type="range" min="1" max="400" value="100" />
+      <p class="field-help">100% keeps the original size. Applied to both width and height.</p>
     </div>
     <div class="field" style="margin-top:1rem">
       <span class="field-label">Output format</span>
@@ -43,13 +44,42 @@
   `;
 
   window.ForgeIMGToolShell.mount({
-    title: "Resize IMAGE",
+    title: "Resize images",
     convertLabel: "Resize",
     settingsHtml,
   });
 
   let rmode = "pixels";
   let format = "image/webp";
+  let ratio = 1280 / 720;
+  let seedToken = 0;
+  const widthPx = document.getElementById("widthPx");
+  const heightPx = document.getElementById("heightPx");
+  const lockAspect = document.getElementById("lockAspect");
+  const pixelHelp = document.getElementById("pixelHelp");
+
+  function syncLock() {
+    const locked = lockAspect.checked;
+    heightPx.disabled = locked;
+    pixelHelp.hidden = !locked;
+    if (locked) {
+      heightPx.value = String(Math.max(1, Math.round(Number(widthPx.value) / ratio)));
+    }
+  }
+
+  widthPx.addEventListener("input", () => {
+    widthPx.dataset.user = "1";
+    if (lockAspect.checked) syncLock();
+  });
+  heightPx.addEventListener("input", () => {
+    widthPx.dataset.user = "1";
+    if (lockAspect.checked) return;
+    const w = Number(widthPx.value);
+    const h = Number(heightPx.value);
+    if (w > 0 && h > 0) ratio = w / h;
+  });
+  lockAspect.addEventListener("change", syncLock);
+  syncLock();
 
   document.getElementById("resizeModeTabs").addEventListener("click", (e) => {
     const btn = e.target.closest("[data-rmode]");
@@ -88,17 +118,44 @@
   F.createToolApp({
     convertLabel: "Resize",
     zipName: "forgeimg-resize.zip",
-    async process(files) {
+    onClear: () => {
+      seedToken += 1;
+      delete widthPx.dataset.user;
+    },
+    onFilesChanged: async (files) => {
+      const token = ++seedToken;
+      const imgFile = files.find((f) => F.isImageFile(f) && !F.isZipFile(f));
+      if (!imgFile) return;
+      try {
+        const img = await F.loadImage(imgFile);
+        if (token !== seedToken) return;
+        const w = img.naturalWidth || img.width;
+        const h = img.naturalHeight || img.height;
+        if (!w || !h) return;
+        ratio = w / h;
+        if (widthPx.dataset.user !== "1") {
+          widthPx.value = String(w);
+          heightPx.value = String(h);
+        } else if (lockAspect.checked) {
+          syncLock();
+        }
+      } catch {
+        /* keep the current numbers */
+      }
+    },
+    async process(files, report) {
       if (!F.supportsFormat(format)) {
         throw new Error("This browser cannot encode the selected format.");
       }
-      const lock = document.getElementById("lockAspect").checked;
-      const wIn = Math.max(1, Number(document.getElementById("widthPx").value) || 1);
-      const hIn = Math.max(1, Number(document.getElementById("heightPx").value) || 1);
-      const pct = Math.max(1, Number(document.getElementById("scalePct").value) || 50) / 100;
+      const lock = lockAspect.checked;
+      const wIn = Math.max(1, Number(widthPx.value) || 1);
+      const hIn = Math.max(1, Number(heightPx.value) || 1);
+      const pct = Math.max(1, Number(document.getElementById("scalePct").value) || 100) / 100;
       const rows = [];
 
-      for (const file of files) {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        report?.(i, files.length, file.name);
         try {
           const img = await F.loadImage(file);
           const srcW = img.naturalWidth || img.width;
@@ -148,7 +205,9 @@
       const ok = rows.filter((r) => r.ok);
       return {
         rows,
-        summary: `${ok.length}/${rows.length} resized · mode ${rmode}`,
+        summary: `${ok.length}/${rows.length} resized · ${
+          rmode === "percent" ? "by percent" : "by pixels"
+        }`,
       };
     },
   });

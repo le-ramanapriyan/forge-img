@@ -8,10 +8,11 @@ Files never leave your browser.
 
 | Tool | Path |
 |------|------|
-| Compress IMAGE | [compress/](./compress/) |
-| Convert IMAGE (WebP / PNG / JPEG) | [convert/](./convert/) |
-| Resize IMAGE | [resize/](./resize/) |
-| Crop IMAGE | [crop/](./crop/) |
+| Compress images | [compress/](./compress/) |
+| Convert images (WebP / JPEG / PNG) | [convert/](./convert/) |
+| Resize images | [resize/](./resize/) |
+| Crop images | [crop/](./crop/) |
+| Lottie fallback (first frame → WebP / JPEG / PNG) | [lottie/](./lottie/) |
 
 ## Design
 
@@ -33,3 +34,4 @@ Open http://localhost:8080/
 - https://le-ramanapriyan.github.io/private-repo/convert/
 - https://le-ramanapriyan.github.io/private-repo/resize/
 - https://le-ramanapriyan.github.io/private-repo/crop/
+- https://le-ramanapriyan.github.io/private-repo/lottie/

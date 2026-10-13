@@ -71,7 +71,34 @@
   margin: 0;
   color: var(--ink-dark-muted);
   font-size: 1.05rem;
-  max-width: 40ch;
+  max-width: 42ch;
+}
+
+.tool-points {
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.55rem;
+  max-width: 42ch;
+}
+
+.tool-points li {
+  position: relative;
+  padding-left: 1.15rem;
+  color: var(--ink-dark-muted);
+  font-size: 0.95rem;
+}
+
+.tool-points li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.5rem;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--accent);
 }
 
 #tool-workspace {
@@ -133,4 +160,7 @@
 }
 .tool-card:nth-child(4) {
   animation-delay: 0.2s;
+}
+.tool-card:nth-child(5) {
+  animation-delay: 0.25s;
 }

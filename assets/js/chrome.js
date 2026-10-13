@@ -6,6 +6,7 @@
     { id: "convert", label: "Convert", href: "convert/" },
     { id: "resize", label: "Resize", href: "resize/" },
     { id: "crop", label: "Crop", href: "crop/" },
+    { id: "lottie", label: "Lottie", href: "lottie/" },
   ];
 
   function basePrefix() {
@@ -44,23 +45,21 @@
       <p class="header-author">RAMANAPRIYAN M R V</p>
     `;
 
-    const footLinks = TOOLS.map(
-      (t) => `<a href="${resolve(t.href)}">${t.label}</a>`
-    ).join("");
+    const footLinks = [
+      `<a href="${resolve("index.html")}">Home</a>`,
+      ...TOOLS.map((t) => `<a href="${resolve(t.href)}">${t.label}</a>`),
+    ].join("");
 
     footerMount.innerHTML = `
       <div class="footer-grid">
         <div>
           <strong style="color:var(--ink-on-dark)">ForgeIMG</strong>
-          <div class="footer-links" style="margin-top:0.55rem">${footLinks}</div>
+          <p class="footer-note">
+            Processing stays on your device. Files are never uploaded.
+          </p>
         </div>
-        <div>
-          <a href="${resolve("index.html")}">Home</a>
-        </div>
+        <div class="footer-links">${footLinks}</div>
       </div>
-      <p class="footer-note">
-        Processing stays on your device. Files are never uploaded to a server.
-      </p>
       <p class="footer-copy">© ${year} RAMANAPRIYAN M R V · ForgeIMG</p>
     `;
   }
