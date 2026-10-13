@@ -9,7 +9,7 @@ Files never leave your browser.
 | Tool | Path |
 |------|------|
 | Compress IMAGE | [compress/](./compress/) |
-| Convert to WebP | [convert-webp/](./convert-webp/) |
+| Convert IMAGE (WebP / PNG / JPEG) | [convert/](./convert/) |
 | Resize IMAGE | [resize/](./resize/) |
 | Crop IMAGE | [crop/](./crop/) |
 
@@ -30,6 +30,6 @@ Open http://localhost:8080/
 
 - https://le-ramanapriyan.github.io/private-repo/
 - https://le-ramanapriyan.github.io/private-repo/compress/
-- https://le-ramanapriyan.github.io/private-repo/convert-webp/
+- https://le-ramanapriyan.github.io/private-repo/convert/
 - https://le-ramanapriyan.github.io/private-repo/resize/
 - https://le-ramanapriyan.github.io/private-repo/crop/

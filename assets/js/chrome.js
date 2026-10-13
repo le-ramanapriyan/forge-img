@@ -3,7 +3,7 @@
 
   const TOOLS = [
     { id: "compress", label: "Compress", href: "compress/" },
-    { id: "convert-webp", label: "WebP", href: "convert-webp/" },
+    { id: "convert", label: "Convert", href: "convert/" },
     { id: "resize", label: "Resize", href: "resize/" },
     { id: "crop", label: "Crop", href: "crop/" },
   ];

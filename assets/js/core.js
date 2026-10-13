@@ -529,7 +529,10 @@
       }
 
       busy = false;
-      els.convertBtn.textContent = config.convertLabel || "Process";
+      els.convertBtn.textContent =
+        typeof config.convertLabel === "function"
+          ? config.convertLabel()
+          : config.convertLabel || "Process";
       syncFooter();
     }
 
@@ -553,9 +556,13 @@
     els.clearBtn.addEventListener("click", () => clearAll());
     els.downloadAllBtn.addEventListener("click", () => {
       const ok = state.results.filter((r) => r.ok && r.blob);
+      const zipName =
+        typeof config.zipName === "function"
+          ? config.zipName()
+          : config.zipName || "forgeimg.zip";
       zipDownload(
         ok.map((r) => ({ name: r.name, blob: r.blob })),
-        config.zipName || "forgeimg.zip"
+        zipName
       );
     });
 
