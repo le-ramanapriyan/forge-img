@@ -27,6 +27,23 @@
     return /\.(zip|lottie)$/i.test(file.name);
   }
 
+  function sourceImageFormat(file) {
+    if (!file) return null;
+    const fromName = guessMime(file.name || "");
+    const rawMime =
+      fromName !== "application/octet-stream"
+        ? fromName
+        : String(file.type || "").toLowerCase();
+    const mime = rawMime === "image/jpg" ? "image/jpeg" : rawMime;
+    if (mime === "image/jpeg") {
+      const ext = /\.jpeg$/i.test(file.name || "") ? "jpeg" : "jpg";
+      return { mime, ext, label: "JPEG" };
+    }
+    if (mime === "image/png") return { mime, ext: "png", label: "PNG" };
+    if (mime === "image/webp") return { mime, ext: "webp", label: "WebP" };
+    return null;
+  }
+
   function escapeHtml(s) {
     return String(s)
       .replaceAll("&", "&amp;")
@@ -102,6 +119,20 @@
   async function encodeAtQuality(canvas, mime, quality) {
     const blob = await canvasToBlob(canvas, mime, quality);
     return { blob, quality };
+  }
+
+  function encodePngLossless(canvas) {
+    if (typeof UPNG === "undefined" || typeof UPNG.encode !== "function") {
+      throw new Error("PNG optimizer failed to load. Refresh and try again.");
+    }
+    const ctx = canvas.getContext("2d");
+    const rgba = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    const pixels = new Uint8Array(rgba);
+    const buffer = UPNG.encode([pixels.buffer], canvas.width, canvas.height, 0);
+    return {
+      blob: new Blob([buffer], { type: "image/png" }),
+      quality: 1,
+    };
   }
 
   async function encodeToSize(canvas, mime, maxBytes) {
@@ -619,13 +650,15 @@
           continue;
         }
 
-        const savedClass = r.saved >= 0 ? "saved-pos" : "saved-neg";
+        const savedClass = r.saved > 0 ? "saved-pos" : r.saved < 0 ? "saved-neg" : "";
         const savedText =
-          (r.saved >= 0 ? "−" : "+") +
-          humanBytes(Math.abs(r.saved)) +
-          (r.savedPct != null
-            ? ` (${Math.abs(r.savedPct).toFixed(0)}%)`
-            : "");
+          r.saved === 0
+            ? "No reduction"
+            : (r.saved > 0 ? "−" : "+") +
+              humanBytes(Math.abs(r.saved)) +
+              (r.savedPct != null
+                ? ` (${Math.abs(r.savedPct).toFixed(0)}%)`
+                : "");
         const meta = [r.meta, r.detail].filter(Boolean).join(" · ");
 
         li.innerHTML = `
@@ -804,6 +837,7 @@
     humanBytes,
     isImageFile,
     isZipFile,
+    sourceImageFormat,
     isFromFolder,
     escapeHtml,
     outName,
@@ -812,6 +846,7 @@
     canvasFromImage,
     canvasToBlob,
     encodeAtQuality,
+    encodePngLossless,
     encodeToSize,
     downloadBlob,
     zipDownload,

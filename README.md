@@ -8,7 +8,7 @@ Files never leave your browser.
 
 | Tool | Path |
 |------|------|
-| Compress images | [compress/](./compress/) |
+| Compress images (same format) | [compress/](./compress/) |
 | Convert images (WebP / JPEG / PNG) | [convert/](./convert/) |
 | Resize images | [resize/](./resize/) |
 | Crop images | [crop/](./crop/) |

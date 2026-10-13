@@ -20,12 +20,13 @@
             <h1>Compress images</h1>
             <p>
               Make JPEG, PNG, and WebP files smaller without changing their
-              width or height. Pick a quality preset, a percentage, or a
-              maximum file size.
+              format, width, or height. Pick a quality preset, a percentage,
+              or a maximum file size for JPEG and WebP; PNG stays lossless.
             </p>
             <ul class="tool-points">
               <li>One image, a folder, or a ZIP</li>
-              <li>Output as WebP, JPEG, or PNG</li>
+              <li>Same format and dimensions as the original</li>
+              <li>Use Convert when you need a different format</li>
               <li>Runs in your browser — nothing is uploaded</li>
             </ul>
           </section>
@@ -37,6 +38,8 @@
     <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
     <script src="../assets/js/chrome.js"></script>
     <script src="../assets/js/network.js"></script>
+    <script src="../assets/js/vendor/pako.min.js"></script>
+    <script src="../assets/js/vendor/UPNG.js"></script>
     <script src="../assets/js/core.js"></script>
     <script src="../assets/js/tool-shell.js"></script>
     <script src="tool.js"></script>
