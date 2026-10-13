@@ -177,9 +177,9 @@ a:hover {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   gap: 0.15rem;
-  flex: 1;
+  margin-left: auto;
 }
 
 .header-nav a {
@@ -209,30 +209,6 @@ a:hover {
   border-top: 1px solid var(--line-on-dark);
   color: var(--ink-dark-muted);
   font-size: 0.86rem;
-}
-
-.footer-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: var(--space-4);
-}
-
-.footer-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem 1.1rem;
-}
-
-.footer-links a {
-  color: var(--ink-dark-muted);
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.footer-links a:hover {
-  color: var(--accent);
 }
 
 .footer-note {
@@ -1054,7 +1030,7 @@ select:focus {
   }
 
   .header-nav {
-    justify-content: flex-start;
+    justify-content: flex-end;
     flex-basis: 100%;
     order: 3;
   }
@@ -1068,6 +1044,7 @@ select:focus {
 
   .header-nav {
     order: 0;
+    align-self: flex-end;
   }
 
   .tool-grid {

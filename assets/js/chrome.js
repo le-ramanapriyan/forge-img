@@ -44,21 +44,11 @@
       <nav class="header-nav" aria-label="Tools">${nav}</nav>
     `;
 
-    const footLinks = [
-      `<a href="${resolve("index.html")}">Home</a>`,
-      ...TOOLS.map((t) => `<a href="${resolve(t.href)}">${t.label}</a>`),
-    ].join("");
-
     footerMount.innerHTML = `
-      <div class="footer-grid">
-        <div>
-          <strong style="color:var(--ink-on-dark)">ForgeIMG</strong>
-          <p class="footer-note">
-            Processing stays on your device. Files are never uploaded.
-          </p>
-        </div>
-        <div class="footer-links">${footLinks}</div>
-      </div>
+      <strong style="color:var(--ink-on-dark)">ForgeIMG</strong>
+      <p class="footer-note">
+        Processing stays on your device. Files are never uploaded.
+      </p>
       <p class="footer-copy">© ${year} le-ramanapriyan · ForgeIMG</p>
     `;
   }

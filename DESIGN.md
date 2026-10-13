@@ -44,8 +44,8 @@ Defined in `assets/css/tokens.css`:
 
 ## Components
 
-- **Header:** logo mark, ForgeIMG wordmark, tool nav.
-- **Footer:** tool links, privacy line, © year + le-ramanapriyan.
+- **Header:** logo mark, ForgeIMG wordmark, right-aligned tool nav.
+- **Footer:** privacy line, © year + le-ramanapriyan.
 - **Tool card:** icon tile, title, short description, “Open” affordance.
 - **Buttons:** `.btn-primary` (red), `.btn-secondary` (white on light), `.btn-ghost` (white-70 outline on dark), `.btn-tertiary` (black), `.btn-lg`.
 - **Workspace (right panel):** Upload → Options → Results step rail; shared footer actions.
