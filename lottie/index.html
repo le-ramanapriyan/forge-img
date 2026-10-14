@@ -8,7 +8,8 @@
       name="description"
       content="Export the first frame of a Lottie file as a WebP, JPEG, or PNG fallback. The image matches the composition size."
     />
-    <link rel="preconnect" href="https://static.zohocdn.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="../assets/css/tokens.css" />
     <link rel="stylesheet" href="../assets/css/components.css" />
     <link rel="stylesheet" href="../assets/css/site.css" />
@@ -17,23 +18,36 @@
     <div class="site-shell">
       <header class="site-header" id="site-header"></header>
       <main class="site-main">
-        <div class="tool-layout">
-          <section class="tool-page-hero">
-            <p class="eyebrow">Lottie</p>
-            <h1>Lottie fallback</h1>
-            <p>
-              Export the first frame as WebP, JPEG, or PNG. The image uses the
-              composition width and height. Compression changes the file size
-              only.
-            </p>
-            <ul class="tool-points">
-              <li>JSON, a folder with assets, a ZIP, or a .lottie file</li>
-              <li>Linked images are picked up automatically</li>
-              <li>Output matches the original composition size</li>
-            </ul>
-          </section>
-          <div id="tool-workspace"></div>
-        </div>
+        <section class="tool-intro">
+          <p class="eyebrow">ForgeIMG / Lottie fallback</p>
+          <h1>Lottie fallback</h1>
+          <p class="body-muted">
+            Export the first frame as WebP, JPEG, or PNG. The image uses the
+            composition width and height. Compression changes the file size only.
+          </p>
+        </section>
+
+        <div id="tool-workspace"></div>
+
+        <section class="band" aria-labelledby="guidance-title">
+          <p class="eyebrow" id="guidance-title">Good to know</p>
+          <div class="guidance-notes">
+            <div class="guidance-note">
+              <h2 class="title-20">A still at the original size.</h2>
+              <p class="body-muted">
+                The first frame is exported at the original composition width and
+                height. Compression changes file size only.
+              </p>
+            </div>
+            <div class="guidance-note">
+              <h2 class="title-20">Bring the animation and its assets.</h2>
+              <p class="body-muted">
+                Use JSON, a folder with assets, a ZIP, or a .lottie file. Linked
+                images are picked up automatically, on your device.
+              </p>
+            </div>
+          </div>
+        </section>
       </main>
       <footer class="site-footer" id="site-footer"></footer>
     </div>

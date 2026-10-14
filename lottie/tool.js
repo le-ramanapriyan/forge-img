@@ -18,13 +18,13 @@
         <button type="button" class="mode-tab" data-format="image/png">PNG</button>
       </div>
     </div>
-    <div id="lossyControls">
-      <div class="field" style="margin-top:1rem">
-        <span class="field-label">Compression</span>
+    <div class="settings-stack" id="lossyControls">
+      <div class="field">
+        <span class="field-label">Compression control</span>
         <div class="segmented" id="modeTabs">
           <button type="button" class="mode-tab is-active" data-mode="preset">Preset</button>
           <button type="button" class="mode-tab" data-mode="quality">Percentage</button>
-          <button type="button" class="mode-tab" data-mode="size">Size</button>
+          <button type="button" class="mode-tab" data-mode="size">Max size</button>
         </div>
       </div>
       <div class="mode-panel is-active" data-panel="preset">
@@ -55,16 +55,23 @@
 
   window.ForgeIMGToolShell.mount({
     title: "Lottie fallback",
-    convertLabel: "Export fallback",
+    convertLabel: "Export first frame",
     settingsHtml,
     accept:
       ".json,application/json,.lottie,.zip,application/zip,application/x-zip-compressed,image/*",
     folderAccept: ".json,application/json,image/*",
-    dropHint: "Lottie JSON, .lottie, a folder with assets, or a ZIP",
-    selectLabel: "Select files",
+    dropTitle: "Drop a Lottie file here",
+    dropHint: "JSON · Folder with assets · ZIP · .lottie",
+    dropIcon: "file-json-32-dark.svg",
+    selectLabel: "Choose Lottie file",
     dropAria: "Drop a Lottie file, folder, or ZIP",
-    emptySummary: "No Lottie files yet.",
-    resultsEmpty: "Export fallbacks to see results here.",
+    emptySummary: "No files selected",
+    uploadNote:
+      "Linked images are picked up automatically. Choose a folder with assets or a ZIP when your animation uses external images.",
+    steps: {
+      upload: "Choose an animation and its assets.",
+      settings: "Choose an output format and compression control.",
+    },
   });
 
   let mode = "preset";
@@ -90,7 +97,7 @@
     pngNote.hidden = !isPng;
     const label = `Lottie → ${meta.label}`;
     if (modalTitle) modalTitle.textContent = label;
-    if (convertBtn) convertBtn.textContent = `Export ${meta.label}`;
+    if (convertBtn) convertBtn.textContent = "Export first frame";
   }
 
   document.getElementById("formatTabs").addEventListener("click", (e) => {
@@ -629,13 +636,13 @@
   }
 
   F.createToolApp({
-    convertLabel: () => `Export ${formatMeta(currentFormat()).label}`,
+    convertLabel: "Export first frame",
     zipName: () => {
       const meta = formatMeta(currentFormat());
       return `forgeimg-lottie-fallback-${meta.ext}.zip`;
     },
     acceptFile: acceptLottieInput,
-    emptySummary: "No Lottie files yet.",
+    emptySummary: "No files selected",
     rejectMessage: "Add a Lottie JSON, a .lottie file, image assets, or a ZIP.",
     queueLabel,
     emptyQueueError: (stats) =>

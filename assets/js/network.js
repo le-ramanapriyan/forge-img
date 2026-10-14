@@ -14,7 +14,17 @@
   var canvasContext = canvas && canvas.getContext("2d");
   if (!canvasContext) return;
 
-  var CONNECT_DISTANCE = 120;
+  var rootStyle = getComputedStyle(document.documentElement);
+  function token(name, fallback) {
+    var value = rootStyle.getPropertyValue(name).trim();
+    return value || fallback;
+  }
+  var DOT_COLOR = token("--net-dot", "rgba(255, 255, 255, 0.7)");
+  var LINE_RGB = token("--net-line", "255, 255, 255");
+  var LINE_ALPHA = parseFloat(token("--net-line-alpha", "0.16"));
+  var CURSOR_ALPHA = parseFloat(token("--net-cursor-alpha", "0.4"));
+  var DENSITY = parseFloat(token("--net-density", "16000"));
+  var CONNECT_DISTANCE = parseFloat(token("--net-distance", "120"));
   var MAX_LINKS_PER_DOT = 3;
   var CURSOR_NEAREST = 8;
   var CURSOR_DISTANCE = 180;
@@ -28,7 +38,7 @@
   var isVisible = false;
 
   function createDots() {
-    var count = Math.round(Math.min(90, Math.max(70, (width * height) / 16000)));
+    var count = Math.round(Math.min(90, Math.max(70, (width * height) / DENSITY)));
     dots = [];
     for (var i = 0; i < count; i++) {
       dots.push({
@@ -53,7 +63,7 @@
   }
 
   function drawLine(x1, y1, x2, y2, opacity, lineWidth) {
-    canvasContext.strokeStyle = "rgba(255, 255, 255, " + opacity + ")";
+    canvasContext.strokeStyle = "rgba(" + LINE_RGB + ", " + opacity + ")";
     canvasContext.lineWidth = lineWidth;
     canvasContext.beginPath();
     canvasContext.moveTo(x1, y1);
@@ -72,7 +82,7 @@
         var dy = dots[i].y - dots[j].y;
         var dist = Math.sqrt(dx * dx + dy * dy);
         if (dist >= CONNECT_DISTANCE) continue;
-        drawLine(dots[i].x, dots[i].y, dots[j].x, dots[j].y, 0.08 + (1 - dist / CONNECT_DISTANCE) * 0.16, 1);
+        drawLine(dots[i].x, dots[i].y, dots[j].x, dots[j].y, LINE_ALPHA / 2 + (1 - dist / CONNECT_DISTANCE) * LINE_ALPHA, 1);
         links++;
       }
     }
@@ -91,12 +101,12 @@
         .slice(0, CURSOR_NEAREST)
         .forEach(function (item) {
           if (item.dist > CURSOR_DISTANCE) return;
-          drawLine(mouse.x, mouse.y, item.dot.x, item.dot.y, 0.3 + (1 - item.dist / CURSOR_DISTANCE) * 0.4, 1.2);
+          drawLine(mouse.x, mouse.y, item.dot.x, item.dot.y, CURSOR_ALPHA * 0.75 + (1 - item.dist / CURSOR_DISTANCE) * CURSOR_ALPHA, 1.2);
         });
     }
 
     canvasContext.setLineDash([]);
-    canvasContext.fillStyle = "rgba(255, 255, 255, 0.7)";
+    canvasContext.fillStyle = DOT_COLOR;
     dots.forEach(function (dot) {
       canvasContext.beginPath();
       canvasContext.arc(dot.x, dot.y, dot.radius, 0, Math.PI * 2);
@@ -130,7 +140,7 @@
     animationId = 0;
   }
 
-  var LIGHT_SURFACES = ".workspace-panel, .modal-root";
+  var LIGHT_SURFACES = ".panel, .privacy-promise";
   var INTERACTIVE = "a, button, label, input, select, textarea, [role='button']";
   var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
   var cursorDot = null;
@@ -221,6 +231,9 @@
   });
 
   if (desktopQuery.matches) resize();
+  requestAnimationFrame(function () {
+    section.classList.add("is-ready");
+  });
 
   if ("IntersectionObserver" in window) {
     new IntersectionObserver(function (entries) {

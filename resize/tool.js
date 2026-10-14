@@ -6,23 +6,23 @@
   const settingsHtml = `
     <div class="field">
       <span class="field-label">Resize mode</span>
-      <div class="segmented segmented-2" id="resizeModeTabs">
+      <div class="segmented" id="resizeModeTabs">
         <button type="button" class="mode-tab is-active" data-rmode="pixels">Pixels</button>
         <button type="button" class="mode-tab" data-rmode="percent">Percent</button>
       </div>
     </div>
     <div class="mode-panel is-active" data-panel="pixels">
       <div class="form-row">
-        <div>
+        <div class="field">
           <label class="field-label" for="widthPx">Width (px)</label>
           <input id="widthPx" type="number" min="1" max="10000" value="1280" />
         </div>
-        <div>
+        <div class="field">
           <label class="field-label" for="heightPx">Height (px)</label>
           <input id="heightPx" type="number" min="1" max="10000" value="720" />
         </div>
       </div>
-      <label class="check-inline" style="margin-top:0.75rem">
+      <label class="check-inline">
         <input id="lockAspect" type="checkbox" checked />
         <span>Lock aspect ratio</span>
       </label>
@@ -33,7 +33,7 @@
       <input id="scalePct" type="range" min="1" max="400" value="100" />
       <p class="field-help">100% keeps the original size. Applied to both width and height.</p>
     </div>
-    <div class="field" style="margin-top:1rem">
+    <div class="field">
       <span class="field-label">Output format</span>
       <div class="segmented" id="formatTabs">
         <button type="button" class="mode-tab is-active" data-format="image/webp">WebP</button>
@@ -45,8 +45,9 @@
 
   window.ForgeIMGToolShell.mount({
     title: "Resize images",
-    convertLabel: "Resize",
+    convertLabel: "Resize images",
     settingsHtml,
+    steps: { settings: "Set dimensions or a scale, then an output format." },
   });
 
   let rmode = "pixels";
@@ -116,7 +117,7 @@
   }
 
   F.createToolApp({
-    convertLabel: "Resize",
+    convertLabel: "Resize images",
     zipName: "forgeimg-resize.zip",
     onClear: () => {
       seedToken += 1;

@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Convert images — ForgeIMG</title>
     <meta name="description" content="Convert images to WebP, JPEG, or PNG in your browser. Files stay on your device." />
-    <link rel="preconnect" href="https://static.zohocdn.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="../assets/css/tokens.css" />
     <link rel="stylesheet" href="../assets/css/components.css" />
     <link rel="stylesheet" href="../assets/css/site.css" />
@@ -14,22 +15,37 @@
     <div class="site-shell">
       <header class="site-header" id="site-header"></header>
       <main class="site-main">
-        <div class="tool-layout">
-          <section class="tool-page-hero">
-            <p class="eyebrow">Convert</p>
-            <h1>Convert images</h1>
-            <p>
-              Turn images into WebP, JPEG, or PNG. The original file name stays
-              the same — only the extension changes.
-            </p>
-            <ul class="tool-points">
-              <li>WebP, JPEG, or PNG</li>
-              <li>Preset, percentage, or maximum file size</li>
-              <li>Folder and ZIP batches</li>
-            </ul>
-          </section>
-          <div id="tool-workspace"></div>
-        </div>
+        <section class="tool-intro">
+          <p class="eyebrow">ForgeIMG / Convert</p>
+          <h1>Convert images</h1>
+          <p class="body-muted">
+            Save images as WebP, JPEG, or PNG. The original file name stays the
+            same — only the extension changes. Choose a preset, a percentage, or
+            a target size.
+          </p>
+        </section>
+
+        <div id="tool-workspace"></div>
+
+        <section class="band" aria-labelledby="guidance-title">
+          <p class="eyebrow" id="guidance-title">Good to know</p>
+          <div class="guidance-notes">
+            <div class="guidance-note">
+              <h2 class="title-20">The right format. The same name.</h2>
+              <p class="body-muted">
+                Files keep their original name with the new extension. Width and
+                height stay the same.
+              </p>
+            </div>
+            <div class="guidance-note">
+              <h2 class="title-20">Lossy or lossless.</h2>
+              <p class="body-muted">
+                WebP and JPEG accept a preset, a percentage, or a maximum size.
+                PNG is lossless, so those controls do not apply.
+              </p>
+            </div>
+          </div>
+        </section>
       </main>
       <footer class="site-footer" id="site-footer"></footer>
     </div>

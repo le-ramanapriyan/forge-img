@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Crop images — ForgeIMG</title>
     <meta name="description" content="Crop images in your browser with a free selection or a fixed ratio. Files stay on your device." />
-    <link rel="preconnect" href="https://static.zohocdn.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="../assets/css/tokens.css" />
     <link rel="stylesheet" href="../assets/css/components.css" />
     <link rel="stylesheet" href="../assets/css/site.css" />
@@ -14,22 +15,36 @@
     <div class="site-shell">
       <header class="site-header" id="site-header"></header>
       <main class="site-main">
-        <div class="tool-layout">
-          <section class="tool-page-hero">
-            <p class="eyebrow">Crop</p>
-            <h1>Crop images</h1>
-            <p>
-              Drag on the preview to choose what to keep. Use a free selection,
-              or lock the frame to 1:1, 4:3, or 16:9.
-            </p>
-            <ul class="tool-points">
-              <li>Preview uses the first image</li>
-              <li>The same crop is applied to the whole batch</li>
-              <li>WebP and JPEG are saved at 92% quality</li>
-            </ul>
-          </section>
-          <div id="tool-workspace"></div>
-        </div>
+        <section class="tool-intro">
+          <p class="eyebrow">ForgeIMG / Crop</p>
+          <h1>Crop images</h1>
+          <p class="body-muted">
+            Drag on the preview to choose what to keep. Use a free selection, or
+            lock the frame to 1:1, 4:3, or 16:9.
+          </p>
+        </section>
+
+        <div id="tool-workspace"></div>
+
+        <section class="band" aria-labelledby="guidance-title">
+          <p class="eyebrow" id="guidance-title">Good to know</p>
+          <div class="guidance-notes">
+            <div class="guidance-note">
+              <h2 class="title-20">One preview. The whole batch.</h2>
+              <p class="body-muted">
+                The first image is used for the preview. Your crop selection is
+                applied to every image in the batch.
+              </p>
+            </div>
+            <div class="guidance-note">
+              <h2 class="title-20">Free or fixed.</h2>
+              <p class="body-muted">
+                Choose a free selection, 1:1, 4:3, or 16:9. WebP and JPEG outputs
+                are saved at 92% quality.
+              </p>
+            </div>
+          </div>
+        </section>
       </main>
       <footer class="site-footer" id="site-footer"></footer>
     </div>

@@ -18,13 +18,13 @@
         <button type="button" class="mode-tab" data-format="image/png">PNG</button>
       </div>
     </div>
-    <div id="lossyControls">
-      <div class="field" style="margin-top:1rem">
-        <span class="field-label">Compression mode</span>
+    <div class="settings-stack" id="lossyControls">
+      <div class="field">
+        <span class="field-label">Compression control</span>
         <div class="segmented" id="modeTabs">
           <button type="button" class="mode-tab is-active" data-mode="preset">Preset</button>
           <button type="button" class="mode-tab" data-mode="quality">Percentage</button>
-          <button type="button" class="mode-tab" data-mode="size">Size</button>
+          <button type="button" class="mode-tab" data-mode="size">Max size</button>
         </div>
       </div>
       <div class="mode-panel is-active" data-panel="preset">
@@ -54,6 +54,7 @@
     title: "Convert to WebP",
     convertLabel: "Convert to WebP",
     settingsHtml,
+    steps: { settings: "Choose an output format and compression control." },
   });
 
   let mode = "preset";

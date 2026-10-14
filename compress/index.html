@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Compress images — ForgeIMG</title>
     <meta name="description" content="Compress JPEG, PNG, and WebP images in your browser. Files stay on your device." />
-    <link rel="preconnect" href="https://static.zohocdn.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="../assets/css/tokens.css" />
     <link rel="stylesheet" href="../assets/css/components.css" />
     <link rel="stylesheet" href="../assets/css/site.css" />
@@ -14,24 +15,36 @@
     <div class="site-shell">
       <header class="site-header" id="site-header"></header>
       <main class="site-main">
-        <div class="tool-layout">
-          <section class="tool-page-hero">
-            <p class="eyebrow">Compress</p>
-            <h1>Compress images</h1>
-            <p>
-              Make JPEG, PNG, and WebP files smaller without changing their
-              format, width, or height. Pick a quality preset, a percentage,
-              or a maximum file size for JPEG and WebP; PNG stays lossless.
-            </p>
-            <ul class="tool-points">
-              <li>One image, a folder, or a ZIP</li>
-              <li>Same format and dimensions as the original</li>
-              <li>Use Convert when you need a different format</li>
-              <li>Runs in your browser — nothing is uploaded</li>
-            </ul>
-          </section>
-          <div id="tool-workspace"></div>
-        </div>
+        <section class="tool-intro">
+          <p class="eyebrow">ForgeIMG / Compress</p>
+          <h1>Compress images</h1>
+          <p class="body-muted">
+            Make JPEG, PNG, and WebP files smaller without changing their width
+            or height. Pick a quality preset, a percentage, or a maximum file size.
+          </p>
+        </section>
+
+        <div id="tool-workspace"></div>
+
+        <section class="band" aria-labelledby="guidance-title">
+          <p class="eyebrow" id="guidance-title">Good to know</p>
+          <div class="guidance-notes">
+            <div class="guidance-note">
+              <h2 class="title-20">Smaller files. Same dimensions.</h2>
+              <p class="body-muted">
+                Compression changes the file size, not the width or height. If
+                you need different dimensions, use Resize.
+              </p>
+            </div>
+            <div class="guidance-note">
+              <h2 class="title-20">A single image or a batch.</h2>
+              <p class="body-muted">
+                Add one image, choose a folder, or open a ZIP. Each file keeps
+                its original format — nothing is uploaded.
+              </p>
+            </div>
+          </div>
+        </section>
       </main>
       <footer class="site-footer" id="site-footer"></footer>
     </div>

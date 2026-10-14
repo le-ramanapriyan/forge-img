@@ -5,11 +5,11 @@
 
   const settingsHtml = `
     <div class="field">
-      <span class="field-label">Compression</span>
+      <span class="field-label">Compression control</span>
       <div class="segmented" id="modeTabs">
         <button type="button" class="mode-tab is-active" data-mode="preset">Preset</button>
         <button type="button" class="mode-tab" data-mode="quality">Percentage</button>
-        <button type="button" class="mode-tab" data-mode="size">Size</button>
+        <button type="button" class="mode-tab" data-mode="size">Max size</button>
       </div>
     </div>
     <div class="mode-panel is-active" data-panel="preset">
@@ -37,8 +37,9 @@
 
   window.ForgeIMGToolShell.mount({
     title: "Compress images",
-    convertLabel: "Compress",
+    convertLabel: "Compress images",
     settingsHtml,
+    steps: { settings: "Choose a quality control." },
   });
 
   let mode = "preset";
@@ -74,7 +75,7 @@
   }
 
   F.createToolApp({
-    convertLabel: "Compress",
+    convertLabel: "Compress images",
     zipName: "forgeimg-compress.zip",
     acceptFile: (file) => F.isZipFile(file) || Boolean(F.sourceImageFormat(file)),
     rejectMessage:

@@ -6,7 +6,7 @@
     { id: "convert", label: "Convert", href: "convert/" },
     { id: "resize", label: "Resize", href: "resize/" },
     { id: "crop", label: "Crop", href: "crop/" },
-    { id: "lottie", label: "Lottie", href: "lottie/" },
+    { id: "lottie", label: "Lottie fallback", href: "lottie/" },
   ];
 
   function basePrefix() {
@@ -21,35 +21,41 @@
 
   function injectChrome() {
     const active = document.body.dataset.tool || "home";
-    const year = new Date().getFullYear();
 
     const headerMount = document.getElementById("site-header");
     const footerMount = document.getElementById("site-footer");
     if (!headerMount || !footerMount) return;
 
-    const nav = TOOLS.map((t) => {
-      const href = resolve(t.href);
-      const cls = t.id === active ? "is-active" : "";
-      return `<a href="${href}" class="${cls}">${t.label}</a>`;
-    }).join("");
+    const links = (activeClass) =>
+      TOOLS.map((t) => {
+        const current = activeClass && t.id === active;
+        return `<a href="${resolve(t.href)}"${
+          current ? ' class="is-active" aria-current="page"' : ""
+        }>${t.label}</a>`;
+      }).join("");
 
     headerMount.innerHTML = `
-      <a class="brand-link" href="${resolve("index.html")}">
-        <span class="brand-mark" aria-hidden="true"></span>
-        <span>
-          <p class="brand-name">ForgeIMG</p>
-          <p class="brand-tag">On-device image tools</p>
-        </span>
-      </a>
-      <nav class="header-nav" aria-label="Tools">${nav}</nav>
+      <a class="brand-link" href="${resolve("index.html")}">ForgeIMG</a>
+      <nav class="header-nav" aria-label="Tools">${links(true)}</nav>
+      <p class="privacy-indicator">
+        <img class="icon" src="${resolve("assets/icons/shield-check-16.svg")}" width="16" height="16" alt="" />
+        On-device only
+      </p>
     `;
 
     footerMount.innerHTML = `
-      <strong style="color:var(--ink-on-dark)">ForgeIMG</strong>
-      <p class="footer-note">
-        Processing stays on your device. Files are never uploaded.
-      </p>
-      <p class="footer-copy">© ${year} le-ramanapriyan · ForgeIMG</p>
+      <div class="footer-content">
+        <div class="footer-brand">
+          <p class="footer-brand-name">ForgeIMG</p>
+          <p class="body-muted">On-device image tools by RAMANAPRIYAN M R V.</p>
+        </div>
+        <nav class="footer-links" aria-label="Footer tools">${links(false)}</nav>
+      </div>
+      <hr class="hairline" />
+      <div class="footer-notes">
+        <p>Your files never leave your browser.</p>
+        <p>Made to keep things simple.</p>
+      </div>
     `;
   }
 

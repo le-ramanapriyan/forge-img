@@ -5,24 +5,26 @@
 
   const settingsHtml = `
     <div class="field">
-      <span class="field-label">Aspect ratio</span>
-      <div class="segmented segmented-4" id="aspectTabs">
+      <span class="field-label">Crop frame</span>
+      <div class="segmented" id="aspectTabs">
         <button type="button" class="mode-tab is-active" data-aspect="free">Free</button>
         <button type="button" class="mode-tab" data-aspect="1">1:1</button>
-        <button type="button" class="mode-tab" data-aspect="1.777">16:9</button>
         <button type="button" class="mode-tab" data-aspect="1.333">4:3</button>
+        <button type="button" class="mode-tab" data-aspect="1.777">16:9</button>
       </div>
     </div>
-    <div class="field" style="margin-top:1rem">
-      <span class="field-label">Preview (first image)</span>
-      <div class="crop-stage">
-        <div class="crop-canvas-wrap">
-          <canvas id="cropCanvas" width="640" height="360"></canvas>
-        </div>
-        <p class="field-help" id="cropHint">Add an image, then drag on the preview. A small click keeps the current crop.</p>
+    <div class="crop-stage">
+      <div class="crop-canvas-wrap">
+        <canvas id="cropCanvas" width="640" height="360"></canvas>
+      </div>
+      <div class="crop-placeholder">
+        <img class="icon" src="../assets/icons/crop-32-dark.svg" width="32" height="32" alt="" />
+        <p class="crop-placeholder-title">Add images to begin your crop</p>
+        <p class="crop-placeholder-note">The first image will appear here.</p>
       </div>
     </div>
-    <div class="field" style="margin-top:1rem">
+    <p class="field-help" id="cropHint">Drag on the preview to choose what to keep. The same crop is applied to the whole batch.</p>
+    <div class="field">
       <span class="field-label">Output format</span>
       <div class="segmented" id="formatTabs">
         <button type="button" class="mode-tab is-active" data-format="image/webp">WebP</button>
@@ -30,12 +32,14 @@
         <button type="button" class="mode-tab" data-format="image/png">PNG</button>
       </div>
     </div>
+    <p class="field-help">WebP and JPEG are saved at 92% quality. PNG is also available.</p>
   `;
 
   window.ForgeIMGToolShell.mount({
     title: "Crop images",
-    convertLabel: "Crop",
+    convertLabel: "Crop images",
     settingsHtml,
+    steps: { settings: "Draw your selection or choose a fixed frame ratio." },
   });
 
   let aspect = "free";
@@ -109,7 +113,7 @@
       ctx.fillStyle = "#111111";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = "#a3a3a3";
-      ctx.font = "14px Zoho Puvi, sans-serif";
+      ctx.font = "14px Inter, sans-serif";
       ctx.fillText("No preview yet", 24, 40);
       return;
     }
@@ -259,7 +263,7 @@
   }
 
   F.createToolApp({
-    convertLabel: "Crop",
+    convertLabel: "Crop images",
     zipName: "forgeimg-crop.zip",
     onFilesChanged: (files) => {
       loadPreview(files);

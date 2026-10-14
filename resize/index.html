@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Resize images — ForgeIMG</title>
     <meta name="description" content="Resize images by pixels or percent in your browser. Files stay on your device." />
-    <link rel="preconnect" href="https://static.zohocdn.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="../assets/css/tokens.css" />
     <link rel="stylesheet" href="../assets/css/components.css" />
     <link rel="stylesheet" href="../assets/css/site.css" />
@@ -14,22 +15,37 @@
     <div class="site-shell">
       <header class="site-header" id="site-header"></header>
       <main class="site-main">
-        <div class="tool-layout">
-          <section class="tool-page-hero">
-            <p class="eyebrow">Resize</p>
-            <h1>Resize images</h1>
-            <p>
-              Change the width and height in pixels, or scale every image by a
-              percentage. Lock the aspect ratio to keep proportions.
-            </p>
-            <ul class="tool-points">
-              <li>Pixels or percent</li>
-              <li>Each image can keep its own proportions</li>
-              <li>WebP and JPEG are saved at 92% quality</li>
-            </ul>
-          </section>
-          <div id="tool-workspace"></div>
-        </div>
+        <section class="tool-intro">
+          <p class="eyebrow">ForgeIMG / Resize</p>
+          <h1>Resize images</h1>
+          <p class="body-muted">
+            Set width and height in pixels, or scale by percent. Lock the aspect
+            ratio so nothing gets stretched.
+          </p>
+        </section>
+
+        <div id="tool-workspace"></div>
+
+        <section class="band" aria-labelledby="guidance-title">
+          <p class="eyebrow" id="guidance-title">Good to know</p>
+          <div class="guidance-notes">
+            <div class="guidance-note">
+              <h2 class="title-20">Pixels or percent.</h2>
+              <p class="body-muted">
+                Enter exact dimensions, or scale every image by the same
+                percentage. With the ratio locked, each image keeps its own
+                proportions.
+              </p>
+            </div>
+            <div class="guidance-note">
+              <h2 class="title-20">Saved the way you need.</h2>
+              <p class="body-muted">
+                Save as WebP, JPEG, or PNG. WebP and JPEG outputs are saved at
+                92% quality.
+              </p>
+            </div>
+          </div>
+        </section>
       </main>
       <footer class="site-footer" id="site-footer"></footer>
     </div>

@@ -8,7 +8,8 @@
       name="description"
       content="ForgeIMG: compress, convert formats, resize, crop, and Lottie fallbacks in your browser."
     />
-    <link rel="preconnect" href="https://static.zohocdn.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="assets/css/tokens.css" />
     <link rel="stylesheet" href="assets/css/components.css" />
     <link rel="stylesheet" href="assets/css/site.css" />
@@ -18,75 +19,283 @@
       <header class="site-header" id="site-header"></header>
       <main class="site-main">
         <section class="hero">
-          <p class="eyebrow">On your device</p>
-          <h1>Every essential image tool, forged for speed</h1>
-          <p class="lede">
-            Compress, convert, resize, and crop images, or export a still from
-            a Lottie file. Processing stays in your browser — nothing is uploaded.
-          </p>
-          <div class="hero-actions">
-            <a class="btn btn-primary btn-lg" href="compress/">Start with Compress</a>
-            <a class="btn btn-ghost btn-lg" href="convert/">Convert images</a>
+          <div class="hero-content">
+            <div class="hero-intro">
+              <p class="eyebrow">On your device</p>
+              <h1 class="hero-title">Every essential image tool, forged for speed</h1>
+              <p class="hero-lede">
+                Compress, convert, resize, and crop images, or export a still from
+                a Lottie file. Processing stays in your browser — nothing is uploaded.
+              </p>
+              <div class="hero-actions">
+                <a class="btn btn-primary btn-wide" href="compress/">Start with Compress</a>
+                <a class="btn btn-dark btn-md" href="convert/">Convert images</a>
+              </div>
+            </div>
+            <nav class="tool-index" aria-label="The essentials">
+              <p class="eyebrow">The essentials</p>
+              <a class="index-entry" href="compress/">
+                <span class="index-entry-num">01</span>
+                <span class="index-entry-name">Compress</span>
+                <img class="icon" src="assets/icons/minimize-2-24.svg" width="24" height="24" alt="" />
+              </a>
+              <a class="index-entry" href="convert/">
+                <span class="index-entry-num">02</span>
+                <span class="index-entry-name">Convert</span>
+                <img class="icon" src="assets/icons/repeat-2-24.svg" width="24" height="24" alt="" />
+              </a>
+              <a class="index-entry" href="resize/">
+                <span class="index-entry-num">03</span>
+                <span class="index-entry-name">Resize</span>
+                <img class="icon" src="assets/icons/maximize-2-24.svg" width="24" height="24" alt="" />
+              </a>
+              <a class="index-entry" href="crop/">
+                <span class="index-entry-num">04</span>
+                <span class="index-entry-name">Crop</span>
+                <img class="icon" src="assets/icons/crop-24.svg" width="24" height="24" alt="" />
+              </a>
+              <a class="index-entry" href="lottie/">
+                <span class="index-entry-num">05</span>
+                <span class="index-entry-name">Lottie fallback</span>
+                <img class="icon" src="assets/icons/file-json-24.svg" width="24" height="24" alt="" />
+              </a>
+            </nav>
+          </div>
+          <hr class="hairline" />
+          <div class="hero-facts">
+            <p>JPEG · PNG · WebP</p>
+            <p>Single images · Folders · ZIPs</p>
+            <p>Files never leave your browser</p>
           </div>
         </section>
 
-        <p class="section-label">Tools</p>
-        <section class="tool-grid" aria-label="ForgeIMG tools">
-          <a class="tool-card" href="compress/">
-            <div class="tool-card-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M4 9l5 3-5 3"/><path d="M20 9l-5 3 5 3"/><path d="M9 12h6"/></svg>
-            </div>
-            <h2>Compress images</h2>
-            <p>
-              Shrink JPEG, PNG, or WebP while keeping its original format and
-              dimensions. PNG optimization stays lossless.
+        <section class="band" aria-labelledby="directory-title">
+          <p class="eyebrow">Choose your tool</p>
+          <div class="split-heading">
+            <h2 class="display-40" id="directory-title">One task. One focused tool.</h2>
+            <p class="body-muted">
+              The essentials, without the extra noise. Start with the change your
+              image needs.
             </p>
-            <span class="tool-card-cta">Open tool →</span>
-          </a>
-          <a class="tool-card" href="convert/">
-            <div class="tool-card-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M4 7h11"/><path d="M12 4l4 3-4 3"/><path d="M20 17H9"/><path d="M12 14l-4 3 4 3"/></svg>
+          </div>
+          <div class="stack-16">
+            <a class="tool-row" href="compress/">
+              <img class="icon" src="assets/icons/minimize-2-32.svg" width="32" height="32" alt="" />
+              <h3 class="title-20 tool-row-title">Compress images</h3>
+              <p class="body-muted tool-row-desc">
+                Shrink JPEG, PNG, or WebP with a preset, a quality percentage, or a
+                maximum file size. Dimensions stay the same.
+              </p>
+              <span class="tool-row-cta">Open tool →</span>
+            </a>
+            <a class="tool-row" href="convert/">
+              <img class="icon" src="assets/icons/repeat-2-32.svg" width="32" height="32" alt="" />
+              <h3 class="title-20 tool-row-title">Convert images</h3>
+              <p class="body-muted tool-row-desc">
+                Save as WebP, JPEG, or PNG. Keep the original file name and choose
+                a preset, a percentage, or a target size.
+              </p>
+              <span class="tool-row-cta">Open tool →</span>
+            </a>
+            <a class="tool-row" href="resize/">
+              <img class="icon" src="assets/icons/maximize-2-32.svg" width="32" height="32" alt="" />
+              <h3 class="title-20 tool-row-title">Resize images</h3>
+              <p class="body-muted tool-row-desc">
+                Set width and height in pixels, or scale by percent. Lock the
+                aspect ratio so nothing gets stretched.
+              </p>
+              <span class="tool-row-cta">Open tool →</span>
+            </a>
+            <a class="tool-row" href="crop/">
+              <img class="icon" src="assets/icons/crop-32.svg" width="32" height="32" alt="" />
+              <h3 class="title-20 tool-row-title">Crop images</h3>
+              <p class="body-muted tool-row-desc">
+                Draw the area to keep. Use a free selection, or lock the frame to
+                1:1, 4:3, or 16:9.
+              </p>
+              <span class="tool-row-cta">Open tool →</span>
+            </a>
+            <a class="tool-row" href="lottie/">
+              <img class="icon" src="assets/icons/file-json-32.svg" width="32" height="32" alt="" />
+              <h3 class="title-20 tool-row-title">Lottie fallback</h3>
+              <p class="body-muted tool-row-desc">
+                Export the first frame of a Lottie file as WebP, JPEG, or PNG at
+                the original composition size.
+              </p>
+              <span class="tool-row-cta">Open tool →</span>
+            </a>
+          </div>
+        </section>
+
+        <section class="band band-gap-64" aria-labelledby="workflow-title">
+          <div class="stack-24">
+            <p class="eyebrow">A straightforward workflow</p>
+            <h2 class="display-40" id="workflow-title">From source file to ready-to-use image.</h2>
+            <div class="workflow-steps">
+              <div class="workflow-step">
+                <p class="workflow-num">01</p>
+                <h3 class="title-20">Choose your input</h3>
+                <p class="body-muted">
+                  Add an image, a folder, or a ZIP. For Lottie, bring your
+                  animation and its assets.
+                </p>
+              </div>
+              <div class="workflow-step">
+                <p class="workflow-num">02</p>
+                <h3 class="title-20">Set the essentials</h3>
+                <p class="body-muted">
+                  Choose the format, quality, dimensions, or crop that suits the task.
+                </p>
+              </div>
+              <div class="workflow-step">
+                <p class="workflow-num">03</p>
+                <h3 class="title-20">Save your output</h3>
+                <p class="body-muted">
+                  Process in your browser, then download the resulting files to
+                  your device.
+                </p>
+              </div>
             </div>
-            <h2>Convert images</h2>
-            <p>
-              Save as WebP, JPEG, or PNG. Keep the original file name and choose
-              a preset, a percentage, or a target size.
-            </p>
-            <span class="tool-card-cta">Open tool →</span>
-          </a>
-          <a class="tool-card" href="resize/">
-            <div class="tool-card-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M4 9V4h5"/><path d="M20 9V4h-5"/><path d="M4 15v5h5"/><path d="M20 15v5h-5"/></svg>
+          </div>
+
+          <hr class="hairline" />
+
+          <div class="split">
+            <div class="split-aside">
+              <p class="eyebrow">One image or a whole set</p>
+              <h2 class="display-40">Bring your files.<br />Keep your flow.</h2>
+              <p class="body-muted">
+                Choose a single file, select a folder, or open a ZIP. Batch
+                settings apply to the images you bring in.
+              </p>
             </div>
-            <h2>Resize images</h2>
-            <p>
-              Set width and height in pixels, or scale by percent. Lock the
-              aspect ratio so nothing gets stretched.
-            </p>
-            <span class="tool-card-cta">Open tool →</span>
-          </a>
-          <a class="tool-card" href="crop/">
-            <div class="tool-card-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M6 3v15h15"/><path d="M3 6h15v15"/></svg>
+            <div class="split-main">
+              <div class="input-card">
+                <img class="icon" src="assets/icons/image-24.svg" width="24" height="24" alt="" />
+                <div class="input-card-copy">
+                  <h3 class="title-20">Single image</h3>
+                  <p>Start with one JPEG, PNG, or WebP.</p>
+                </div>
+              </div>
+              <div class="input-card">
+                <img class="icon" src="assets/icons/folder-24.svg" width="24" height="24" alt="" />
+                <div class="input-card-copy">
+                  <h3 class="title-20">Folder</h3>
+                  <p>Work with images together in one place.</p>
+                </div>
+              </div>
+              <div class="input-card">
+                <img class="icon" src="assets/icons/file-archive-24.svg" width="24" height="24" alt="" />
+                <div class="input-card-copy">
+                  <h3 class="title-20">ZIP archive</h3>
+                  <p>Bring a packaged batch into the browser.</p>
+                </div>
+              </div>
             </div>
-            <h2>Crop images</h2>
-            <p>
-              Draw the area to keep. Use a free selection, or lock the frame to
-              1:1, 4:3, or 16:9.
-            </p>
-            <span class="tool-card-cta">Open tool →</span>
-          </a>
-          <a class="tool-card" href="lottie/">
-            <div class="tool-card-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9.5v5l5-2.5-5-2.5z"/></svg>
+          </div>
+
+          <hr class="hairline" />
+
+          <div class="split">
+            <div class="split-aside">
+              <p class="eyebrow">Familiar formats</p>
+              <h2 class="display-40">The right file for the job.</h2>
+              <p class="body-muted">
+                Export images as WebP, JPEG, or PNG. Lottie fallback exports a
+                still in those same formats.
+              </p>
             </div>
-            <h2>Lottie fallback</h2>
-            <p>
-              Export the first frame of a Lottie file as WebP, JPEG, or PNG at
-              the original composition size.
-            </p>
-            <span class="tool-card-cta">Open tool →</span>
-          </a>
+            <div class="split-main is-loose">
+              <div class="format-row">
+                <p class="format-name">WebP</p>
+                <p class="body-muted">Compact images for the web.</p>
+              </div>
+              <div class="format-row">
+                <p class="format-name">JPEG</p>
+                <p class="body-muted">A familiar format for photographs.</p>
+              </div>
+              <div class="format-row">
+                <p class="format-name">PNG</p>
+                <p class="body-muted">A lossless image format.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="band band-gap-64" aria-label="Privacy and next steps">
+          <div class="privacy-promise">
+            <div class="privacy-promise-copy">
+              <img class="icon" src="assets/icons/shield-check-40-dark.svg" width="40" height="40" alt="" />
+              <p class="eyebrow">Built around your device</p>
+              <h2 class="display-40">Your files stay yours.</h2>
+              <p>
+                Processing stays in your browser — nothing is uploaded. From the
+                file you choose to the image you save, the work happens on your device.
+              </p>
+            </div>
+            <ul class="privacy-facts">
+              <li>
+                <img class="icon" src="assets/icons/check-20-dark.svg" width="20" height="20" alt="" />
+                No uploads
+              </li>
+              <li>
+                <img class="icon" src="assets/icons/check-20-dark.svg" width="20" height="20" alt="" />
+                Browser-based processing
+              </li>
+              <li>
+                <img class="icon" src="assets/icons/check-20-dark.svg" width="20" height="20" alt="" />
+                Download to your device
+              </li>
+            </ul>
+          </div>
+
+          <div class="split">
+            <div class="split-aside is-narrow">
+              <p class="eyebrow">A few useful answers</p>
+              <h2 class="display-40">Before you begin.</h2>
+            </div>
+            <div class="split-main is-faq">
+              <div class="faq-item">
+                <h3 class="title-20">Are my files uploaded?</h3>
+                <p class="body-muted">
+                  No. Processing happens on your device, inside your browser. Your
+                  files never leave the browser.
+                </p>
+              </div>
+              <div class="faq-item">
+                <h3 class="title-20">Does compression change image dimensions?</h3>
+                <p class="body-muted">
+                  No. Compress keeps the original width and height. Use Resize when
+                  you want to change dimensions.
+                </p>
+              </div>
+              <div class="faq-item">
+                <h3 class="title-20">How does cropping a batch work?</h3>
+                <p class="body-muted">
+                  The preview uses the first image. The same crop selection is
+                  applied to the whole batch.
+                </p>
+              </div>
+              <div class="faq-item">
+                <h3 class="title-20">What does Lottie fallback export?</h3>
+                <p class="body-muted">
+                  The first frame as WebP, JPEG, or PNG, at the original composition
+                  width and height. Linked images are picked up automatically.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <hr class="hairline" />
+
+          <div class="closing">
+            <div class="closing-copy">
+              <p class="eyebrow">Ready when you are</p>
+              <h2 class="display-40">Less file. Same dimensions.</h2>
+              <p class="body-muted">Start with Compress. Your images stay on your device.</p>
+            </div>
+            <a class="btn btn-primary btn-wide" href="compress/">Start with Compress</a>
+          </div>
         </section>
       </main>
       <footer class="site-footer" id="site-footer"></footer>

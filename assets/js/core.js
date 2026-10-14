@@ -463,7 +463,7 @@
 
     const acceptFile = config.acceptFile || isAcceptableInput;
     const emptySummaryText =
-      config.emptySummary || "No images selected yet.";
+      config.emptySummary || "No files selected";
 
     function mergeAccepted(existing, fileList) {
       const incoming = Array.from(fileList || []).filter(acceptFile);
@@ -573,26 +573,43 @@
       const okCount = state.results.filter((r) => r.ok).length;
       const hasAnyWork = hasFiles || state.results.length > 0;
 
+      // All three panels stay on screen, so every action is always present.
       els.clearBtn.hidden = !hasAnyWork;
-      els.backBtn.hidden = idx === 0;
-      els.nextBtn.hidden = state.step !== "upload";
-      els.convertBtn.hidden = state.step !== "settings";
-      els.downloadAllBtn.hidden = state.step !== "results";
+      els.backBtn.hidden = true;
+      els.nextBtn.hidden = true;
+      els.convertBtn.hidden = false;
+      els.downloadAllBtn.hidden = false;
 
       els.clearBtn.disabled = busy;
-      els.backBtn.disabled = busy;
-      els.nextBtn.disabled = !hasFiles || busy;
       els.convertBtn.disabled = !hasFiles || busy;
       els.downloadAllBtn.disabled = okCount === 0 || busy;
-      els.downloadAllBtn.textContent = okCount === 1 ? "Download" : "Download ZIP";
+      els.downloadAllBtn.textContent = okCount === 1 ? "Download" : "Download all";
       els.dropzone?.classList.toggle("is-busy", busy);
 
+      const progress =
+        state.step === "results" && state.results.length
+          ? "results"
+          : hasFiles
+            ? "settings"
+            : STEPS[idx];
+      const progressIdx = STEPS.indexOf(progress);
       document.querySelectorAll("[data-step-btn]").forEach((btn) => {
         const step = btn.dataset.stepBtn;
         const stepIdx = STEPS.indexOf(step);
-        btn.classList.toggle("is-active", step === state.step);
-        btn.classList.toggle("is-done", stepIdx < idx);
+        btn.classList.toggle("is-active", step === progress);
+        btn.classList.toggle("is-done", stepIdx < progressIdx);
       });
+
+      const stateEl = document.getElementById("workspaceState");
+      if (stateEl) {
+        stateEl.textContent = busy
+          ? "Processing…"
+          : okCount
+            ? `${okCount} file${okCount === 1 ? "" : "s"} ready to download`
+            : hasFiles
+              ? "Ready to process"
+              : "Awaiting files";
+      }
     }
 
     function setStep(step) {
@@ -768,6 +785,9 @@
         if (busy) return;
         const step = btn.dataset.stepBtn;
         if (step === "settings" && !state.files.length) return;
+        document
+          .querySelector(`.step-view[data-step="${step}"]`)
+          ?.scrollIntoView({ behavior: "smooth", block: "start" });
         if (step === "results" && !state.results.length) return;
         showError("");
         setStep(step);
